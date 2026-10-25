@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NiceCarCleaner - Gestão Premium</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- App content will be injected here by JS -->
+        <div class="loading-screen">
+            <div class="logo-container">
+                <!-- Logo will be inserted here -->
+                <h1 class="logo-text">NiceCarCleaner</h1>
+            </div>
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <!-- Scripts (Loaded sequentially for file:// compatibility) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <script src="js/store.js"></script>
+    <script src="js/services/ExportService.js"></script>
+
+    <script src="js/components/Sidebar.js"></script>
+    <script src="js/components/Dashboard.js"></script>
+    <script src="js/components/Clients.js"></script>
+    <script src="js/components/Services.js"></script>
+    <script src="js/components/Schedule.js"></script>
+    <script src="js/components/Billing.js"></script>
+    <script src="js/components/Expenses.js"></script>
+    <script src="js/components/Products.js"></script>
+    <script src="js/components/DataView.js"></script>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+:root {
+    /* Colors - Premium Dark Theme */
+    --bg-app: #0f0f0f;
+    --bg-sidebar: #161616;
+    --bg-card: #1e1e1e;
+    --bg-input: #2a2a2a;
+    --bg-primary: #0f0f0f;
+
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666666;
+
+    /* Accents - Red & White (Sporty/Premium) */
+    --accent-primary: #FF3B30;
+    /* Vibrant Red */
+    --accent-secondary: #FFFFFF;
+    /* White */
+    --accent-danger: #ff453a;
+    --accent-success: #32d74b;
+
+    --border-color: #333333;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Typography */
+    --font-family: 'Inter', sans-serif;
+
+    /* Shadows */
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 15px rgba(0, 122, 255, 0.15);
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* App-like feel */
+}
+
+* {
+    box-sizing: border-box;
+}
