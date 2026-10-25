@@ -1,0 +1,19 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "fullscreen",
+  "name": "NiceCarCleaner",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "NCC",
+  "start_url": "/",
+  "theme_color": "#7a0a0a",
+  "id": "NiceCarCleaner",
+  "description": "Gestao",
+  "lang": "pt",
+  "categories": [
+    "business",
+    "cars",
+    "finance"
+  ]
+}
