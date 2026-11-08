@@ -1,6 +1,144 @@
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyAk5tceK_KGpIniIBmdxtkPnApmcBCMk3s",
+    authDomain: "nicecarcleaner-gestao.firebaseapp.com",
+    projectId: "nicecarcleaner-gestao",
+    storageBucket: "nicecarcleaner-gestao.firebasestorage.app",
+    messagingSenderId: "1026184905550",
+    appId: "1:1026184905550:web:83bd2bfb8d38fa8844941f"
+};
+
+const SYNC_COLLECTIONS = ['clients', 'services', 'appointments', 'expenses', 'products', 'inspections'];
+
 class Store {
     constructor() {
+        this.listeners = [];
+        this.statusListeners = [];
+        this.syncStatus = 'connecting';
+        this.db = null;
+        this.isApplyingRemote = false;
         this.load();
+        this.initCloudSync();
+    }
+
+    onDataChanged(callback) {
+        this.listeners.push(callback);
+    }
+
+    notifyListeners() {
+        this.listeners.forEach(cb => {
+            try { cb(); } catch (e) { console.error(e); }
+        });
+    }
+
+    onSyncStatusChanged(callback) {
+        this.statusListeners.push(callback);
+        callback(this.syncStatus);
+    }
+
+    setSyncStatus(status) {
+        this.syncStatus = status;
+        this.statusListeners.forEach(cb => {
+            try { cb(status); } catch (e) { console.error(e); }
+        });
+    }
+
+    hasLocalData() {
+        if (!this.state) return false;
+        return SYNC_COLLECTIONS.some(key => Array.isArray(this.state[key]) && this.state[key].length > 0);
+    }
+
+    initCloudSync() {
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase SDK não disponível. A funcionar em modo local.');
+            this.setSyncStatus('offline');
+            return;
+        }
+
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(FIREBASE_CONFIG);
+            }
+            this.db = firebase.firestore();
+
+            this.db.collection('ncc_data').onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    if (this.hasLocalData()) {
+                        this.saveAllToCloud();
+                    } else {
+                        this.setSyncStatus('synced');
+                    }
+                    return;
+                }
+
+                let changed = false;
+                this.isApplyingRemote = true;
+
+                snapshot.docs.forEach(doc => {
+                    const section = doc.id;
+                    if (SYNC_COLLECTIONS.includes(section)) {
+                        const data = doc.data();
+                        if (data && Array.isArray(data.items)) {
+                            const currentJson = JSON.stringify(this.state[section] || []);
+                            const incomingJson = JSON.stringify(data.items);
+                            if (currentJson !== incomingJson) {
+                                this.state[section] = data.items;
+                                changed = true;
+                            }
+                        }
+                    }
+                });
+
+                if (changed) {
+                    this.runMigrations(false);
+                    localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
+                    this.notifyListeners();
+                }
+
+                this.isApplyingRemote = false;
+                this.setSyncStatus('synced');
+            }, (error) => {
+                console.error('Erro na sincronização com Firebase:', error);
+                this.setSyncStatus('offline');
+            });
+        } catch (err) {
+            console.error('Falha ao inicializar Firebase:', err);
+            this.setSyncStatus('offline');
+        }
+    }
+
+    async syncSectionToCloud(section) {
+        if (!this.db || !SYNC_COLLECTIONS.includes(section)) return;
+        this.setSyncStatus('syncing');
+        try {
+            const cleanItems = JSON.parse(JSON.stringify(this.state[section] || []));
+            await this.db.collection('ncc_data').doc(section).set({
+                items: cleanItems,
+                updatedAt: Date.now()
+            });
+            this.setSyncStatus('synced');
+        } catch (err) {
+            console.error(`Erro ao guardar secção ${section} na nuvem:`, err);
+            this.setSyncStatus('offline');
+        }
+    }
+
+    async saveAllToCloud() {
+        if (!this.db) return;
+        this.setSyncStatus('syncing');
+        try {
+            const promises = SYNC_COLLECTIONS.map(section => {
+                const cleanItems = JSON.parse(JSON.stringify(this.state[section] || []));
+                return this.db.collection('ncc_data').doc(section).set({
+                    items: cleanItems,
+                    updatedAt: Date.now()
+                });
+            });
+            await Promise.all(promises);
+            this.setSyncStatus('synced');
+        } catch (err) {
+            console.error('Erro ao sincronizar todos os dados para a nuvem:', err);
+            this.setSyncStatus('offline');
+        }
     }
 
     load() {
@@ -16,54 +154,66 @@ class Store {
                 products: [],
                 inspections: []
             };
-            this.save();
+            localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
         }
 
-        // Ensure inspections array exists for old data
-        if (!this.state.inspections) {
-            this.state.inspections = [];
-            this.save();
-        }
+        // Ensure all collections exist
+        SYNC_COLLECTIONS.forEach(key => {
+            if (!Array.isArray(this.state[key])) {
+                this.state[key] = [];
+            }
+        });
 
-        // MIGRATION: Convert single vehicle to array
+        this.runMigrations(true);
+    }
+
+    runMigrations(persist = true) {
         let migrationNeeded = false;
-        this.state.clients = this.state.clients.map(c => {
+        this.state.clients = (this.state.clients || []).map(c => {
             if (c.vehicle && !c.vehicles) {
                 migrationNeeded = true;
-                return {
+                const migrated = {
                     ...c,
-                    vehicles: [{ model: c.vehicle, plate: c.plate || '' }],
-                    vehicle: undefined, // Remove old fields
-                    plate: undefined
+                    vehicles: [{ model: c.vehicle, plate: c.plate || '' }]
                 };
+                delete migrated.vehicle;
+                delete migrated.plate;
+                return migrated;
             }
             return c;
         });
 
-        this.state.appointments = this.state.appointments.map(a => {
+        this.state.appointments = (this.state.appointments || []).map(a => {
             if (a.serviceId && !a.serviceIds) {
                 migrationNeeded = true;
-                return {
+                const migrated = {
                     ...a,
-                    serviceIds: [a.serviceId],
-                    serviceId: undefined // Remove old field
+                    serviceIds: [a.serviceId]
                 };
+                delete migrated.serviceId;
+                return migrated;
             }
-            // Ensure serviceIds exists if it's a new empty appointment or legacy weirdness
             if (!a.serviceIds) {
                 a.serviceIds = [];
             }
             return a;
         });
 
-        if (migrationNeeded) {
-            this.save();
+        if (migrationNeeded && persist) {
+            localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
             console.log('Migrated data structures (clients/vehicles and appointments/services).');
         }
     }
 
-    save() {
+    save(section = null) {
         localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
+        if (!this.isApplyingRemote) {
+            if (section) {
+                this.syncSectionToCloud(section);
+            } else {
+                this.saveAllToCloud();
+            }
+        }
     }
 
     // Clients
@@ -78,7 +228,7 @@ class Store {
         if (!client.vehicles) client.vehicles = [];
 
         this.state.clients.push(client);
-        this.save();
+        this.save('clients');
         return client;
     }
 
@@ -86,13 +236,13 @@ class Store {
         const index = this.state.clients.findIndex(c => c.id === updatedClient.id);
         if (index !== -1) {
             this.state.clients[index] = { ...this.state.clients[index], ...updatedClient };
-            this.save();
+            this.save('clients');
         }
     }
 
     deleteClient(id) {
         this.state.clients = this.state.clients.filter(c => c.id !== id);
-        this.save();
+        this.save('clients');
     }
 
     // Services
@@ -104,13 +254,13 @@ class Store {
     addService(service) {
         service.id = Date.now().toString();
         this.state.services.push(service);
-        this.save();
+        this.save('services');
         return service;
     }
 
     deleteService(id) {
         this.state.services = this.state.services.filter(s => s.id !== id);
-        this.save();
+        this.save('services');
     }
 
     // Appointments
@@ -123,7 +273,7 @@ class Store {
         // Status: 'scheduled', 'completed', 'paid'
         if (!appointment.status) appointment.status = 'scheduled';
         this.state.appointments.push(appointment);
-        this.save();
+        this.save('appointments');
         return appointment;
     }
 
@@ -137,7 +287,7 @@ class Store {
             if (paymentMethod !== null) {
                 this.state.appointments[index].paymentMethod = paymentMethod;
             }
-            this.save();
+            this.save('appointments');
         }
     }
 
@@ -148,7 +298,7 @@ class Store {
             // Preserve immutable fields if not provided
             const existing = this.state.appointments[index];
             this.state.appointments[index] = { ...existing, ...updated };
-            this.save();
+            this.save('appointments');
         }
     }
 
@@ -158,13 +308,13 @@ class Store {
             this.state.appointments[index].status = 'cancelled';
             this.state.appointments[index].cancellationReason = reason;
             this.state.appointments[index].isJustified = isJustified;
-            this.save();
+            this.save('appointments');
         }
     }
 
     deleteAppointment(id) {
         this.state.appointments = this.state.appointments.filter(a => a.id !== id);
-        this.save();
+        this.save('appointments');
     }
 
     // Expenses
@@ -178,13 +328,13 @@ class Store {
             expense.date = new Date().toISOString();
         }
         this.state.expenses.push(expense);
-        this.save();
+        this.save('expenses');
         return expense;
     }
 
     deleteExpense(id) {
         this.state.expenses = this.state.expenses.filter(e => e.id !== id);
-        this.save();
+        this.save('expenses');
     }
 
     // Products
@@ -195,7 +345,7 @@ class Store {
     addProduct(product) {
         product.id = Date.now().toString();
         this.state.products.push(product);
-        this.save();
+        this.save('products');
         return product;
     }
 
@@ -212,13 +362,13 @@ class Store {
         inspection.id = Date.now().toString();
         inspection.date = new Date().toISOString();
         this.state.inspections.push(inspection);
-        this.save();
+        this.save('inspections');
         return inspection;
     }
 
     deleteInspection(id) {
         this.state.inspections = this.state.inspections.filter(i => i.id !== id);
-        this.save();
+        this.save('inspections');
     }
 }
 

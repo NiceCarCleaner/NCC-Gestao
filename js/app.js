@@ -3,6 +3,15 @@ class App {
         this.appElement = document.getElementById('app');
         this.currentPage = 'dashboard';
         this.init();
+
+        store.onDataChanged(() => {
+            const activeEl = document.activeElement;
+            const isTyping = activeEl && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeEl.tagName);
+            const openModal = document.querySelector('.modal[style*="flex"], .modal[style*="block"]');
+            if (!isTyping && !openModal) {
+                this.navigateTo(this.currentPage);
+            }
+        });
     }
 
     init() {
@@ -19,7 +28,6 @@ class App {
         `;
 
         // Initialize Sidebar
-        // Assuming Sidebar is globally available now
         new Sidebar(document.getElementById('sidebar'), (page) => this.navigateTo(page));
     }
 
@@ -61,5 +69,5 @@ class App {
 
 // Initialize App when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    new App();
+    window.app = new App();
 });
