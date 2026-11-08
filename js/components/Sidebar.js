@@ -3,14 +3,43 @@ class Sidebar {
         this.container = container;
         this.navigate = navigateCallback;
         this.activeItem = 'dashboard';
+        this.syncStatus = store.syncStatus || 'connecting';
         this.render();
+
+        store.onSyncStatusChanged((status) => {
+            this.syncStatus = status;
+            this.updateSyncBadge();
+        });
+    }
+
+    getSyncBadgeInfo() {
+        switch (this.syncStatus) {
+            case 'synced':
+                return { icon: '☁️', text: 'Sincronizado', color: '#34c759' };
+            case 'syncing':
+            case 'connecting':
+                return { icon: '🔄', text: 'A sincronizar...', color: '#ff9f0a' };
+            default:
+                return { icon: '📴', text: 'Modo Local', color: '#8e8e93' };
+        }
+    }
+
+    updateSyncBadge() {
+        const badge = this.container.querySelector('#cloud-sync-badge');
+        if (!badge) return;
+        const info = this.getSyncBadgeInfo();
+        badge.innerHTML = `<span class="sync-dot" style="background:${info.color};"></span> ${info.icon} ${info.text}`;
     }
 
     render() {
+        const info = this.getSyncBadgeInfo();
         this.container.innerHTML = `
             <div class="sidebar-container">
                 <div class="sidebar-header" style="text-align:center;">
                     <img src="assets/bg_watermark.png" alt="NiceCarCleaner" style="max-width: 150px; height: auto;">
+                    <div id="cloud-sync-badge" class="cloud-sync-badge">
+                        <span class="sync-dot" style="background:${info.color};"></span> ${info.icon} ${info.text}
+                    </div>
                 </div>
                 <ul class="nav-links">
                     <li data-page="dashboard" class="${this.activeItem === 'dashboard' ? 'active' : ''}">
@@ -67,6 +96,23 @@ class Sidebar {
                     background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
+                }
+                .cloud-sync-badge {
+                    margin-top: 8px;
+                    font-size: 0.75rem;
+                    color: var(--text-secondary);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 4px 10px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.05);
+                }
+                .sync-dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    display: inline-block;
                 }
                 .nav-links {
                     list-style: none;
