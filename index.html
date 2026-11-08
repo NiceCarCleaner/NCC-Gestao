@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NiceCarCleaner - Gestão Premium</title>
-    <link rel="manifest" href="./manifest.json">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +14,12 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#7a0a0a">
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png">
+    <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 </head>
 
 <body>
@@ -47,6 +52,15 @@
     <script src="js/components/DataView.js"></script>
 
     <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registado com sucesso:', reg.scope))
+                    .catch(err => console.log('Erro ao registar Service Worker:', err));
+            });
+        }
+    </script>
 </body>
 
 </html>
