@@ -49,7 +49,7 @@ class ExportService {
     }
 
     static backupData() {
-        const data = localStorage.getItem('niceCarCleanerData');
+        const data = JSON.stringify(store.state);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -64,14 +64,15 @@ class ExportService {
     static async restoreData(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
                     // Basic validation
                     if (data.clients && data.services && data.appointments) {
                         localStorage.setItem('niceCarCleanerData', JSON.stringify(data));
-                        // Reload store
+                        // Reload store and sync all restored data to Firebase Cloud
                         store.load();
+                        await store.saveAllToCloud();
                         resolve(true);
                     } else {
                         reject('Ficheiro de backup inválido.');
