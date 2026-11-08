@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ncc-gestao-v1';
+const CACHE_NAME = 'ncc-gestao-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -51,6 +51,12 @@ self.addEventListener('activate', (event) => {
 // Network-first strategy with cache fallback (ensures latest updates when online, works offline)
 self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
+
+    const url = event.request.url;
+    // Do not intercept Firebase / Firestore real-time streams
+    if (url.includes('firestore.googleapis.com') || url.includes('googleapis.com') || url.includes('firebaseio.com')) {
+        return;
+    }
 
     event.respondWith(
         fetch(event.request)
