@@ -16,11 +16,16 @@ class Store {
         this.syncStatus = 'connecting';
         this.db = null;
         this.isApplyingRemote = false;
+        this.hasInitialServerSync = false;
         this.load();
         this.initCloudSync();
     }
 
     onDataChanged(callback) {
+        this.listeners.push(callback);
+    }
+
+    onRemoteUpdate(callback) {
         this.listeners.push(callback);
     }
 
@@ -47,6 +52,83 @@ class Store {
         return SYNC_COLLECTIONS.some(key => Array.isArray(this.state[key]) && this.state[key].length > 0);
     }
 
+    getItemTimestamp(item) {
+        if (!item) return 0;
+        if (typeof item.updatedAt === 'number' && !isNaN(item.updatedAt)) return item.updatedAt;
+        const idNum = Number(item.id);
+        if (!isNaN(idNum) && idNum > 1000000000000) return idNum;
+        if (item.createdAt) {
+            const parsed = Date.parse(item.createdAt);
+            if (!isNaN(parsed)) return parsed;
+        }
+        return 0;
+    }
+
+    mergeSectionData(section, remoteData, preferLocalOnTie = false) {
+        const localItems = Array.isArray(this.state[section]) ? this.state[section] : [];
+        const remoteItems = (remoteData && Array.isArray(remoteData.items)) ? remoteData.items : [];
+
+        if (!this.state._deletedIds) this.state._deletedIds = {};
+        const localDeleted = this.state._deletedIds[section] || {};
+        const remoteDeleted = (remoteData && remoteData.deletedIds && typeof remoteData.deletedIds === 'object') ? remoteData.deletedIds : {};
+
+        const mergedDeleted = { ...localDeleted };
+        for (const [delId, delTime] of Object.entries(remoteDeleted)) {
+            if (!mergedDeleted[delId] || delTime > mergedDeleted[delId]) {
+                mergedDeleted[delId] = delTime;
+            }
+        }
+        this.state._deletedIds[section] = mergedDeleted;
+
+        const map = new Map();
+
+        for (const rItem of remoteItems) {
+            if (!rItem || !rItem.id) continue;
+            const rTime = this.getItemTimestamp(rItem);
+            const delTime = mergedDeleted[rItem.id] || 0;
+            if (delTime && delTime >= rTime && rTime > 0) continue;
+            if (delTime && rTime === 0) continue;
+            map.set(String(rItem.id), rItem);
+        }
+
+        let localHasUnsyncedChanges = false;
+
+        for (const lItem of localItems) {
+            if (!lItem || !lItem.id) continue;
+            const idKey = String(lItem.id);
+            const lTime = this.getItemTimestamp(lItem);
+            const delTime = mergedDeleted[idKey] || 0;
+            if (delTime && delTime >= lTime && lTime > 0) continue;
+            if (delTime && lTime === 0) continue;
+
+            if (!map.has(idKey)) {
+                map.set(idKey, lItem);
+                localHasUnsyncedChanges = true;
+            } else {
+                const rItem = map.get(idKey);
+                const rTime = this.getItemTimestamp(rItem);
+                if (lTime > rTime) {
+                    map.set(idKey, lItem);
+                    localHasUnsyncedChanges = true;
+                } else if (lTime === rTime && preferLocalOnTie) {
+                    if (JSON.stringify(lItem) !== JSON.stringify(rItem)) {
+                        map.set(idKey, lItem);
+                        localHasUnsyncedChanges = true;
+                    }
+                }
+            }
+        }
+
+        for (const [delId, delTime] of Object.entries(localDeleted)) {
+            if (!remoteDeleted[delId] || delTime > remoteDeleted[delId]) {
+                localHasUnsyncedChanges = true;
+            }
+        }
+
+        const mergedItems = Array.from(map.values());
+        return { mergedItems, mergedDeleted, localHasUnsyncedChanges };
+    }
+
     initCloudSync() {
         if (typeof firebase === 'undefined') {
             console.warn('Firebase SDK não disponível. A funcionar em modo local.');
@@ -61,16 +143,26 @@ class Store {
             this.db = firebase.firestore();
 
             this.db.collection('ncc_data').onSnapshot((snapshot) => {
+                const fromCache = snapshot.metadata && snapshot.metadata.fromCache;
+
                 if (snapshot.empty) {
-                    if (this.hasLocalData()) {
-                        this.saveAllToCloud();
-                    } else {
-                        this.setSyncStatus('synced');
+                    if (!fromCache) {
+                        this.hasInitialServerSync = true;
+                        if (this.hasLocalData()) {
+                            this.saveAllToCloud();
+                        } else {
+                            this.setSyncStatus('synced');
+                        }
                     }
                     return;
                 }
 
+                if (!fromCache) {
+                    this.hasInitialServerSync = true;
+                }
+
                 let changed = false;
+                const sectionsToPushBack = [];
                 this.isApplyingRemote = true;
 
                 snapshot.docs.forEach(doc => {
@@ -79,10 +171,16 @@ class Store {
                         const data = doc.data();
                         if (data && Array.isArray(data.items)) {
                             const currentJson = JSON.stringify(this.state[section] || []);
-                            const incomingJson = JSON.stringify(data.items);
-                            if (currentJson !== incomingJson) {
-                                this.state[section] = data.items;
+                            const { mergedItems, localHasUnsyncedChanges } = this.mergeSectionData(section, data, false);
+                            const mergedJson = JSON.stringify(mergedItems);
+
+                            if (currentJson !== mergedJson) {
+                                this.state[section] = mergedItems;
                                 changed = true;
+                            }
+
+                            if (!fromCache && localHasUnsyncedChanges) {
+                                sectionsToPushBack.push(section);
                             }
                         }
                     }
@@ -92,10 +190,16 @@ class Store {
                     this.runMigrations(false);
                     localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
                     this.notifyListeners();
+                } else {
+                    localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
                 }
 
                 this.isApplyingRemote = false;
                 this.setSyncStatus('synced');
+
+                if (sectionsToPushBack.length > 0) {
+                    sectionsToPushBack.forEach(sec => this.syncSectionToCloud(sec, true));
+                }
             }, (error) => {
                 console.error('Erro na sincronização com Firebase:', error);
                 this.setSyncStatus('offline');
@@ -106,13 +210,32 @@ class Store {
         }
     }
 
-    async syncSectionToCloud(section) {
+    async syncSectionToCloud(section, skipServerFetch = false) {
         if (!this.db || !SYNC_COLLECTIONS.includes(section)) return;
         this.setSyncStatus('syncing');
         try {
+            const docRef = this.db.collection('ncc_data').doc(section);
+
+            if (!skipServerFetch) {
+                try {
+                    const serverDoc = await docRef.get({ source: 'server' });
+                    if (serverDoc.exists) {
+                        const serverData = serverDoc.data();
+                        const { mergedItems } = this.mergeSectionData(section, serverData, true);
+                        this.state[section] = mergedItems;
+                        localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
+                    }
+                } catch (fetchErr) {
+                    console.warn('Não foi possível obter versão do servidor antes de gravar, a usar estado fundido atual:', fetchErr);
+                }
+            }
+
             const cleanItems = JSON.parse(JSON.stringify(this.state[section] || []));
-            await this.db.collection('ncc_data').doc(section).set({
+            const cleanDeleted = JSON.parse(JSON.stringify((this.state._deletedIds && this.state._deletedIds[section]) || {}));
+
+            await docRef.set({
                 items: cleanItems,
+                deletedIds: cleanDeleted,
                 updatedAt: Date.now()
             });
             this.setSyncStatus('synced');
@@ -122,16 +245,21 @@ class Store {
         }
     }
 
-    async saveAllToCloud() {
+    async saveAllToCloud(overwriteCloud = false) {
         if (!this.db) return;
         this.setSyncStatus('syncing');
         try {
             const promises = SYNC_COLLECTIONS.map(section => {
-                const cleanItems = JSON.parse(JSON.stringify(this.state[section] || []));
-                return this.db.collection('ncc_data').doc(section).set({
-                    items: cleanItems,
-                    updatedAt: Date.now()
-                });
+                if (overwriteCloud) {
+                    const cleanItems = JSON.parse(JSON.stringify(this.state[section] || []));
+                    const cleanDeleted = JSON.parse(JSON.stringify((this.state._deletedIds && this.state._deletedIds[section]) || {}));
+                    return this.db.collection('ncc_data').doc(section).set({
+                        items: cleanItems,
+                        deletedIds: cleanDeleted,
+                        updatedAt: Date.now()
+                    });
+                }
+                return this.syncSectionToCloud(section, false);
             });
             await Promise.all(promises);
             this.setSyncStatus('synced');
@@ -139,6 +267,27 @@ class Store {
             console.error('Erro ao sincronizar todos os dados para a nuvem:', err);
             this.setSyncStatus('offline');
         }
+    }
+
+    async restoreBackupData(data) {
+        this.state = {
+            clients: Array.isArray(data.clients) ? data.clients : [],
+            services: Array.isArray(data.services) ? data.services : [],
+            appointments: Array.isArray(data.appointments) ? data.appointments : [],
+            expenses: Array.isArray(data.expenses) ? data.expenses : [],
+            products: Array.isArray(data.products) ? data.products : [],
+            inspections: Array.isArray(data.inspections) ? data.inspections : [],
+            _deletedIds: data._deletedIds || {}
+        };
+        this.runMigrations(true);
+        localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
+        await this.saveAllToCloud(true);
+    }
+
+    recordDeletion(section, id) {
+        if (!this.state._deletedIds) this.state._deletedIds = {};
+        if (!this.state._deletedIds[section]) this.state._deletedIds[section] = {};
+        this.state._deletedIds[section][String(id)] = Date.now();
     }
 
     load() {
@@ -152,15 +301,22 @@ class Store {
                 appointments: [],
                 expenses: [],
                 products: [],
-                inspections: []
+                inspections: [],
+                _deletedIds: {}
             };
             localStorage.setItem('niceCarCleanerData', JSON.stringify(this.state));
         }
 
-        // Ensure all collections exist
+        if (!this.state._deletedIds || typeof this.state._deletedIds !== 'object') {
+            this.state._deletedIds = {};
+        }
+
         SYNC_COLLECTIONS.forEach(key => {
             if (!Array.isArray(this.state[key])) {
                 this.state[key] = [];
+            }
+            if (!this.state._deletedIds[key]) {
+                this.state._deletedIds[key] = {};
             }
         });
 
@@ -218,13 +374,14 @@ class Store {
 
     // Clients
     getClients() {
-        return [...this.state.clients].sort((a, b) => a.name.localeCompare(b.name));
+        return [...this.state.clients].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     }
 
     addClient(client) {
-        client.id = Date.now().toString();
-        client.createdAt = new Date().toISOString();
-        // Ensure vehicles is an array
+        const now = Date.now();
+        client.id = now.toString();
+        client.createdAt = new Date(now).toISOString();
+        client.updatedAt = now;
         if (!client.vehicles) client.vehicles = [];
 
         this.state.clients.push(client);
@@ -235,30 +392,37 @@ class Store {
     updateClient(updatedClient) {
         const index = this.state.clients.findIndex(c => c.id === updatedClient.id);
         if (index !== -1) {
-            this.state.clients[index] = { ...this.state.clients[index], ...updatedClient };
+            this.state.clients[index] = {
+                ...this.state.clients[index],
+                ...updatedClient,
+                updatedAt: Date.now()
+            };
             this.save('clients');
         }
     }
 
     deleteClient(id) {
+        this.recordDeletion('clients', id);
         this.state.clients = this.state.clients.filter(c => c.id !== id);
         this.save('clients');
     }
 
     // Services
     getServices() {
-        // Return services sorted alphabetically by name
-        return [...this.state.services].sort((a, b) => a.name.localeCompare(b.name));
+        return [...this.state.services].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     }
 
     addService(service) {
-        service.id = Date.now().toString();
+        const now = Date.now();
+        service.id = now.toString();
+        service.updatedAt = now;
         this.state.services.push(service);
         this.save('services');
         return service;
     }
 
     deleteService(id) {
+        this.recordDeletion('services', id);
         this.state.services = this.state.services.filter(s => s.id !== id);
         this.save('services');
     }
@@ -269,8 +433,9 @@ class Store {
     }
 
     addAppointment(appointment) {
-        appointment.id = Date.now().toString();
-        // Status: 'scheduled', 'completed', 'paid'
+        const now = Date.now();
+        appointment.id = now.toString();
+        appointment.updatedAt = now;
         if (!appointment.status) appointment.status = 'scheduled';
         this.state.appointments.push(appointment);
         this.save('appointments');
@@ -287,17 +452,20 @@ class Store {
             if (paymentMethod !== null) {
                 this.state.appointments[index].paymentMethod = paymentMethod;
             }
+            this.state.appointments[index].updatedAt = Date.now();
             this.save('appointments');
         }
     }
 
-    // Update an existing appointment (used for editing)
     updateAppointment(updated) {
         const index = this.state.appointments.findIndex(a => a.id === updated.id);
         if (index !== -1) {
-            // Preserve immutable fields if not provided
             const existing = this.state.appointments[index];
-            this.state.appointments[index] = { ...existing, ...updated };
+            this.state.appointments[index] = {
+                ...existing,
+                ...updated,
+                updatedAt: Date.now()
+            };
             this.save('appointments');
         }
     }
@@ -308,11 +476,13 @@ class Store {
             this.state.appointments[index].status = 'cancelled';
             this.state.appointments[index].cancellationReason = reason;
             this.state.appointments[index].isJustified = isJustified;
+            this.state.appointments[index].updatedAt = Date.now();
             this.save('appointments');
         }
     }
 
     deleteAppointment(id) {
+        this.recordDeletion('appointments', id);
         this.state.appointments = this.state.appointments.filter(a => a.id !== id);
         this.save('appointments');
     }
@@ -323,9 +493,11 @@ class Store {
     }
 
     addExpense(expense) {
-        expense.id = Date.now().toString();
+        const now = Date.now();
+        expense.id = now.toString();
+        expense.updatedAt = now;
         if (!expense.date) {
-            expense.date = new Date().toISOString();
+            expense.date = new Date(now).toISOString();
         }
         this.state.expenses.push(expense);
         this.save('expenses');
@@ -333,6 +505,7 @@ class Store {
     }
 
     deleteExpense(id) {
+        this.recordDeletion('expenses', id);
         this.state.expenses = this.state.expenses.filter(e => e.id !== id);
         this.save('expenses');
     }
@@ -343,7 +516,9 @@ class Store {
     }
 
     addProduct(product) {
-        product.id = Date.now().toString();
+        const now = Date.now();
+        product.id = now.toString();
+        product.updatedAt = now;
         this.state.products.push(product);
         this.save('products');
         return product;
@@ -359,14 +534,17 @@ class Store {
     }
 
     addInspection(inspection) {
-        inspection.id = Date.now().toString();
-        inspection.date = new Date().toISOString();
+        const now = Date.now();
+        inspection.id = now.toString();
+        inspection.date = new Date(now).toISOString();
+        inspection.updatedAt = now;
         this.state.inspections.push(inspection);
         this.save('inspections');
         return inspection;
     }
 
     deleteInspection(id) {
+        this.recordDeletion('inspections', id);
         this.state.inspections = this.state.inspections.filter(i => i.id !== id);
         this.save('inspections');
     }
