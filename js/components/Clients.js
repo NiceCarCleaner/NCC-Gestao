@@ -1,54 +1,54 @@
-const CORES_DO_VEÍCULO = [
-    { id: 'Preto', rótulo: 'Preto', hex: '#1c1c1e', destaque: '#3a3a40', sombra: '#09090b', borda: '#555' },
+const VEHICLE_COLORS = [
+    { id: 'Preto', label: 'Preto', hex: '#1c1c1e', highlight: '#3a3a40', shadow: '#09090b', border: '#555' },
     { id: 'Branco', label: 'Branco', hex: '#e5e7eb', highlight: '#ffffff', shadow: '#9ca3af', border: '#fff' },
-    { id: 'Cinzento Prata', rótulo: 'Cinzento Prata', hexadecimal: '#9ca3af', destaque: '#e5e7eb', sombra: '#4b5563', borda: '#cbd5e1' },
-    { id: 'Cinzento Escuro', rótulo: 'Cinzento Escuro', hexadecimal: '#4b5563', destaque: '#9ca3af', sombra: '#1f2937', borda: '#6b7280' },
+    { id: 'Cinzento Prata', label: 'Cinzento Prata', hex: '#9ca3af', highlight: '#e5e7eb', shadow: '#4b5563', border: '#cbd5e1' },
+    { id: 'Cinzento Escuro', label: 'Cinzento Escuro', hex: '#4b5563', highlight: '#9ca3af', shadow: '#1f2937', border: '#6b7280' },
     { id: 'Azul', label: 'Azul', hex: '#1d4ed8', highlight: '#60a5fa', shadow: '#1e3a8a', border: '#3b82f6' },
-    { id: 'Vermelho', rótulo: 'Vermelho', hex: '#b91c1c', destaque: '#f87171', sombra: '#7f1d1d', borda: '#ef4444' },
+    { id: 'Vermelho', label: 'Vermelho', hex: '#b91c1c', highlight: '#f87171', shadow: '#7f1d1d', border: '#ef4444' },
     { id: 'Verde', label: 'Verde', hex: '#15803d', highlight: '#4ade80', shadow: '#14532d', border: '#22c55e' },
-    { id: 'Amarelo/Dourado', rótulo: 'Amarelo/Dourado', hexadecimal: '#ca8a04', destaque: '#facc15', sombra: '#713f12', borda: '#eab308' },
-    { id: 'Bege/Castanho', rótulo: 'Bege/Castanho', hex: '#78350f', destaque: '#b45309', sombra: '#451a03', borda: '#a16207' }
+    { id: 'Amarelo/Dourado', label: 'Amarelo/Dourado', hex: '#ca8a04', highlight: '#facc15', shadow: '#713f12', border: '#eab308' },
+    { id: 'Bege/Castanho', label: 'Bege/Castanho', hex: '#78350f', highlight: '#b45309', shadow: '#451a03', border: '#a16207' }
 ];
 
 const PANEL_DEFECT_TYPES = [
     { id: 'scratches', label: 'Riscos / Pintura', icon: '🔴', color: '#ff453a', checklistKey: 'defect_scratches' },
-    { id: 'swirls', label: 'Redemoinhos / Micro-riscos', icon: '🟠', color: '#ff9f0a', checklistKey: 'defect_scratches' },
-    { id: 'dents', label: 'Amolgadala / Mossa', icon: '🟡', color: '#ffd60a', checklistKey: 'defect_dents' },
+    { id: 'swirls', label: 'Swirls / Micro-riscos', icon: '🟠', color: '#ff9f0a', checklistKey: 'defect_scratches' },
+    { id: 'dents', label: 'Amolgadela / Mossa', icon: '🟡', color: '#ffd60a', checklistKey: 'defect_dents' },
     { id: 'clearcoat', label: 'Verniz Queimado', icon: '🟣', color: '#bf5af2', checklistKey: 'defect_scratches' },
-    { id: 'stone_chips', rótulo: 'Picadas de Pedra', ícone: '🔵', cor: '#0a84ff', checklistKey: 'defect_scratches' },
+    { id: 'stone_chips', label: 'Picadas de Pedra', icon: '🔵', color: '#0a84ff', checklistKey: 'defect_scratches' },
     { id: 'rim_damage', label: 'Jante Raspada / Dano', icon: '⚫', color: '#8e8e93', checklistKey: 'defect_wheels' },
-    { id: 'glass_chip', rótulo: 'Vidro Picado / Estalado', ícone: '🟢', cor: '#30d158', checklistKey: 'defect_glass' }
+    { id: 'glass_chip', label: 'Vidro Picado / Estalado', icon: '🟢', color: '#30d158', checklistKey: 'defect_glass' }
 ];
 
 const CAR_PANELS = [
-    { id: 'front_bumper', name: 'Parachoques Frontais', cx: 180, cy: 42 },
+    { id: 'front_bumper', name: 'Para-choques Frontal', cx: 180, cy: 42 },
     { id: 'hood', name: 'Capô', cx: 180, cy: 115 },
     { id: 'windshield', name: 'Para-brisas Frontal', cx: 180, cy: 192 },
-    { id: 'telhado', nome: 'Tejadilho', cx: 180, cy: 278 },
-    { id: 'janela_traseira', nome: 'Óculo Traseiro', cx: 180, cy: 365 },
-    { id: 'tronco', nome: 'Mala/Bagageira', cx: 180, cy: 425 },
-    { id: 'pára-choque_traseiro', nome: 'Para-choques Traseiro', cx: 180, cy: 476 },
+    { id: 'roof', name: 'Tejadilho', cx: 180, cy: 278 },
+    { id: 'rear_window', name: 'Óculo Traseiro', cx: 180, cy: 365 },
+    { id: 'trunk', name: 'Mala / Bagageira', cx: 180, cy: 425 },
+    { id: 'rear_bumper', name: 'Para-choques Traseiro', cx: 180, cy: 476 },
     { id: 'headlight_left', name: 'Farol Frontal Esq.', cx: 112, cy: 52 },
     { id: 'headlight_right', name: 'Farol Frontal Dir.', cx: 248, cy: 52 },
-    { id: 'taillight_left', nome: 'Farol Traseiro Esq.', cx: 114, cy: 465 },
-    { id: 'taillight_right', nome: 'Farol Traseiro Dir.', cx: 246, cy: 465 },
+    { id: 'taillight_left', name: 'Farol Traseiro Esq.', cx: 114, cy: 465 },
+    { id: 'taillight_right', name: 'Farol Traseiro Dir.', cx: 246, cy: 465 },
     { id: 'fender_fl', name: 'Guarda-lamas Frontal Esq.', cx: 78, cy: 122 },
     { id: 'door_fl', name: 'Porta Frontal Esq.', cx: 74, cy: 232 },
-    { id: 'porta_rl', nome: 'Porta Traseira Esq.', cx: 74, cy: 318 },
-    { id: 'trimestre_rl', nome: 'Painel Traseiro Esq.', cx: 78, cy: 408 },
-    { id: 'fender_fr', nome: 'Guarda-lamas Frontal Dir.', cx: 282, cy: 122 },
+    { id: 'door_rl', name: 'Porta Traseira Esq.', cx: 74, cy: 318 },
+    { id: 'quarter_rl', name: 'Painel Traseiro Esq.', cx: 78, cy: 408 },
+    { id: 'fender_fr', name: 'Guarda-lamas Frontal Dir.', cx: 282, cy: 122 },
     { id: 'door_fr', name: 'Porta Frontal Dir.', cx: 286, cy: 232 },
-    { id: 'porta_rr', nome: 'Porta Traseira Dir.', cx: 286, cy: 318 },
-    { id: 'trimestre_rr', nome: 'Painel Traseiro Dir.', cx: 282, cy: 408 },
-    { id: 'mirror_left', nome: 'Espelho Retrovisor Esq.', cx: 52, cy: 185 },
-    { id: 'mirror_right', nome: 'Espelho Retrovisor Dir.', cx: 308, cy: 185 },
+    { id: 'door_rr', name: 'Porta Traseira Dir.', cx: 286, cy: 318 },
+    { id: 'quarter_rr', name: 'Painel Traseiro Dir.', cx: 282, cy: 408 },
+    { id: 'mirror_left', name: 'Espelho Retrovisor Esq.', cx: 52, cy: 185 },
+    { id: 'mirror_right', name: 'Espelho Retrovisor Dir.', cx: 308, cy: 185 },
     { id: 'wheel_fl', name: 'Jante / Pneu Frontal Esq.', cx: 42, cy: 122 },
     { id: 'wheel_fr', name: 'Jante / Pneu Frontal Dir.', cx: 318, cy: 122 },
-    { id: 'wheel_rl', nome: 'Jante / Pneu Traseiro Esq.', cx: 42, cy: 392 },
-    { id: 'wheel_rr', nome: 'Jante / Pneu Traseiro Dir.', cx: 318, cy: 392 }
+    { id: 'wheel_rl', name: 'Jante / Pneu Traseiro Esq.', cx: 42, cy: 392 },
+    { id: 'wheel_rr', name: 'Jante / Pneu Traseiro Dir.', cx: 318, cy: 392 }
 ];
 
-classe Clientes {
+class Clients {
     constructor(container) {
         this.container = container;
         this.currentPanelDefects = {};
@@ -59,30 +59,30 @@ classe Clientes {
     }
 
     getColorMeta(colorName) {
-        retornar VEHICLE_COLORS.find(c => c.id === colorName) || VEHICLE_COLORS[2];
+        return VEHICLE_COLORS.find(c => c.id === colorName) || VEHICLE_COLORS[2];
     }
 
     renderColorOptions(selectedColor = '') {
-        retornar `<option value="">Cor...</option>` + VEHICLE_COLORS.map(c =>
+        return `<option value="">Cor...</option>` + VEHICLE_COLORS.map(c =>
             `<option value="${c.id}" ${c.id === selectedColor ? 'selected' : ''}>${c.label}</option>`
         ).join('');
     }
 
     renderColorBadge(colorName) {
-        se (!colorName) retornar '';
+        if (!colorName) return '';
         const meta = this.getColorMeta(colorName);
-        retornar `<span class="vehicle-color-badge" title="Cor: ${meta.label}">
+        return `<span class="vehicle-color-badge" title="Cor: ${meta.label}">
             <span class="vehicle-color-dot" style="background:${meta.hex}; border-color:${meta.border};"></span>
             ${meta.label}
         </span>`;
     }
 
-    criarHtmlDeEntradaDeVeículo(v = {}, mostrarRemover = falso) {
+    createVehicleEntryHtml(v = {}, showRemove = false) {
         const model = v.model || '';
         const plate = v.plate || '';
-        const ano = v.ano || (typeof PlateLookupService !== 'undefined' && placa ? (PlateLookupService.estimateYearFromPlate(placa) || '') : '');
+        const year = v.year || (typeof PlateLookupService !== 'undefined' && plate ? (PlateLookupService.estimateYearFromPlate(plate) || '') : '');
         const color = v.color || (typeof PlateLookupService !== 'undefined' && model ? (PlateLookupService.inferColorFromModelName(model) || '') : '');
-        retornar `
+        return `
             <div class="vehicle-entry" style="margin-bottom:12px; background:rgba(255,255,255,0.03); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);">
                 <div style="display:grid; grid-template-columns: 1.35fr 2fr 0.8fr 1.25fr auto; gap:8px; align-items:center;">
                     <div style="display:flex; gap:4px; align-items:center;">
@@ -113,25 +113,25 @@ classe Clientes {
 
     getCarModelsDatalistHtml() {
         const modelsSet = new Set(typeof PlateLookupService !== 'undefined' ? PlateLookupService.PT_CAR_CATALOG : []);
-        se (typeof store !== 'undefined' && store.getClients) {
+        if (typeof store !== 'undefined' && store.getClients) {
             store.getClients().forEach(c => {
-                (c.veículos || []).forEach(v => {
-                    se (v.model && v.model.length > 2 && v.model !== 'Varios') {
+                (c.vehicles || []).forEach(v => {
+                    if (v.model && v.model.length > 2 && v.model !== 'Varios') {
                         modelsSet.add(v.model.trim());
                     }
                 });
             });
         }
-        retornar `<datalist id="pt-car-models-list">
-            ${Array.from(modelsSet).sort().map(m => `<option value="${m.replace(/"/g, '"')}"></option>`).join('')}
+        return `<datalist id="pt-car-models-list">
+            ${Array.from(modelsSet).sort().map(m => `<option value="${m.replace(/"/g, '&quot;')}"></option>`).join('')}
         </datalist>`;
     }
 
-    construirCarro3DSvg(prefixo = 'insp') {
-        retornar `
+    buildCar3DSvg(prefix = 'insp') {
+        return `
         <svg id="${prefix}-car-svg" class="car-3d-svg" viewBox="0 0 360 520" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <!-- Gradiente metálico 3D da carroceria (atualizado dinamicamente pela cor do veículo) -->
+                <!-- 3D Metallic Body Gradient (dynamically updated by vehicle color) -->
                 <linearGradient id="${prefix}-body-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" class="car-stop-shadow" stop-color="#4b5563" />
                     <stop offset="22%" class="car-stop-base" stop-color="#9ca3af" />
@@ -174,7 +174,7 @@ classe Clientes {
                 </filter>
             </defs>
 
-            <!-- Sombra ambiente do chão e grade de projeto -->
+            <!-- Ambient Floor Shadow & Blueprint Grid -->
             <rect x="8" y="8" width="344" height="504" rx="18" fill="rgba(10, 14, 24, 0.75)" stroke="rgba(255,255,255,0.06)" />
             <line x1="180" y1="14" x2="180" y2="506" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 6" />
             <line x1="18" y1="260" x2="342" y2="260" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 6" />
@@ -183,11 +183,11 @@ classe Clientes {
             <text x="20" y="256" fill="rgba(255,255,255,0.28)" font-size="8" font-weight="600">ESQ</text>
             <text x="322" y="256" fill="rgba(255,255,255,0.28)" font-size="8" font-weight="600">DIR</text>
 
-            <!-- Silhueta 3D da parte inferior do carro -->
+            <!-- Car Underbody 3D Shadow Silhouette -->
             <path d="M 92 48 Q 180 24 268 48 Q 302 88 302 150 L 304 378 Q 300 448 268 478 Q 180 496 92 478 Q 60 448 56 378 L 58 150 Q 58 88 92 48 Z"
                   fill="rgba(0,0,0,0.55)" filter="url(#${prefix}-drop-shadow)" />
 
-            <!-- 4 RODAS / AROS -->
+            <!-- 4 WHEELS / RIMS -->
             <g class="car-panel" data-panel="wheel_fl" data-name="Jante / Pneu Frontal Esq.">
                 <rect x="28" y="92" width="28" height="60" rx="8" fill="url(#${prefix}-wheel-grad)" stroke="#64748b" stroke-width="1.5" />
                 <line x1="33" y1="106" x2="51" y2="106" stroke="#94a3b8" stroke-width="1.5" />
@@ -213,103 +213,103 @@ classe Clientes {
                 <line x1="309" y1="408" x2="327" y2="408" stroke="#94a3b8" stroke-width="1.5" />
             </g>
 
-            <!-- PARA-CHOQUE DIANTEIRO -->
-            <path class="car-panel" data-panel="front_bumper" data-name="Parachoques Frontal"
+            <!-- FRONT BUMPER -->
+            <path class="car-panel" data-panel="front_bumper" data-name="Para-choques Frontal"
                   d="M 88 54 Q 180 26 272 54 L 262 68 Q 180 48 98 68 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.28)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.28)" stroke-width="1.2" />
 
-            <!-- CAPÔ / CAPÔ -->
+            <!-- HOOD / CAPÔ -->
             <path class="car-panel" data-panel="hood" data-name="Capô"
                   d="M 98 68 Q 180 48 262 68 L 252 166 Q 180 154 108 166 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.28)" largura-do-traço="1.2" />
-            <!-- Linhas de vinco 3D do capô -->
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.28)" stroke-width="1.2" />
+            <!-- Hood 3D crease lines -->
             <path d="M 132 72 L 138 158 M 228 72 L 222 158" stroke="rgba(255,255,255,0.2)" stroke-width="1" pointer-events="none" />
 
-            <!-- PARA-BRISA / PARA-BRISAS -->
+            <!-- WINDSHIELD / PARA-BRISAS -->
             <path class="car-panel" data-panel="windshield" data-name="Para-brisas Frontal"
                   d="M 108 166 Q 180 154 252 166 L 242 220 Q 180 212 118 220 Z"
-                  preencher="url(#${prefix}-glass-grad)" traço="rgba(255,255,255,0.35)" largura-do-traço="1.3" />
+                  fill="url(#${prefix}-glass-grad)" stroke="rgba(255,255,255,0.35)" stroke-width="1.3" />
             <path d="M 122 174 L 148 214" stroke="rgba(255,255,255,0.18)" stroke-width="2" pointer-events="none" />
 
-            <!-- TELHADO / TEJADILHO -->
+            <!-- ROOF / TEJADILHO -->
             <path class="car-panel" data-panel="roof" data-name="Tejadilho"
                   d="M 118 220 Q 180 212 242 220 L 240 340 Q 180 346 120 340 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.28)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.28)" stroke-width="1.2" />
 
-            <!-- JANELA TRASEIRA / ÓCULO TRASEIRO -->
+            <!-- REAR WINDOW / ÓCULO TRASEIRO -->
             <path class="car-panel" data-panel="rear_window" data-name="Óculo Traseiro"
                   d="M 120 340 Q 180 346 240 340 L 248 392 Q 180 400 112 392 Z"
-                  preencher="url(#${prefix}-glass-grad)" traço="rgba(255,255,255,0.35)" largura-do-traço="1.3" />
+                  fill="url(#${prefix}-glass-grad)" stroke="rgba(255,255,255,0.35)" stroke-width="1.3" />
             <path d="M 215 348 L 232 385" stroke="rgba(255,255,255,0.16)" stroke-width="2" pointer-events="none" />
 
             <!-- TRUNK / MALA -->
             <path class="car-panel" data-panel="trunk" data-name="Mala / Bagageira"
                   d="M 112 392 Q 180 400 248 392 L 258 456 Q 180 468 102 456 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.28)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.28)" stroke-width="1.2" />
 
-            <!-- PARA-CHOQUE TRASEIRO -->
+            <!-- REAR BUMPER -->
             <path class="car-panel" data-panel="rear_bumper" data-name="Para-choques Traseiro"
                   d="M 94 456 Q 180 470 266 456 L 260 482 Q 180 496 100 482 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.28)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.28)" stroke-width="1.2" />
 
-            <!-- PAINÉIS LATERAIS ESQUERDOS (Para-lama dianteiro esquerdo, Porta dianteira esquerda, Porta traseira direita, Lateral traseira direita) -->
+            <!-- LEFT SIDE PANELS (Fender FL, Door FL, Door RL, Quarter RL) -->
             <path class="car-panel" data-panel="fender_fl" data-name="Guarda-lamas Frontal Esq."
                   d="M 88 54 L 98 68 L 108 166 L 92 184 L 62 178 Q 56 115 88 54 Z"
-                  preencher="url(#${prefix}-side-left-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-left-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
             <path class="car-panel" data-panel="door_fl" data-name="Porta Frontal Esq."
                   d="M 62 178 L 92 184 L 118 220 L 119 280 L 60 280 Z"
-                  preencher="url(#${prefix}-side-left-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-left-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
             <path class="car-panel" data-panel="door_rl" data-name="Porta Traseira Esq."
                   d="M 60 280 L 119 280 L 120 340 L 96 356 L 62 352 Z"
-                  preencher="url(#${prefix}-side-left-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-left-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
             <path class="car-panel" data-panel="quarter_rl" data-name="Painel Traseiro Esq."
                   d="M 62 352 L 96 356 L 112 392 L 102 456 L 94 456 Q 60 412 62 352 Z"
-                  preencher="url(#${prefix}-side-left-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-left-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
-            <!-- PAINÉIS LATERAIS DIREITOS (Para-lama Dianteiro Direito, Porta Dianteira Dianteira, Porta Traseira Esquerda, Lateral Traseira Esquerda) -->
+            <!-- RIGHT SIDE PANELS (Fender FR, Door FR, Door RR, Quarter RR) -->
             <path class="car-panel" data-panel="fender_fr" data-name="Guarda-lamas Frontal Dir."
                   d="M 272 54 L 262 68 L 252 166 L 268 184 L 298 178 Q 304 115 272 54 Z"
-                  preencher="url(#${prefix}-side-right-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-right-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
             <path class="car-panel" data-panel="door_fr" data-name="Porta Frontal Dir."
                   d="M 298 178 L 268 184 L 242 220 L 241 280 L 300 280 Z"
-                  preencher="url(#${prefix}-side-right-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-right-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
             <path class="car-panel" data-panel="door_rr" data-name="Porta Traseira Dir."
                   d="M 300 280 L 241 280 L 240 340 L 264 356 L 298 352 Z"
-                  preencher="url(#${prefix}-side-right-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-right-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
             <path class="car-panel" data-panel="quarter_rr" data-name="Painel Traseiro Dir."
                   d="M 298 352 L 264 356 L 248 392 L 258 456 L 266 456 Q 300 412 298 352 Z"
-                  preencher="url(#${prefix}-side-right-grad)" traço="rgba(255,255,255,0.26)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-side-right-grad)" stroke="rgba(255,255,255,0.26)" stroke-width="1.2" />
 
-            <!-- RETROVISORES LATERAIS -->
+            <!-- SIDE MIRRORS -->
             <path class="car-panel" data-panel="mirror_left" data-name="Espelho Retrovisor Esq."
                   d="M 64 176 L 40 182 Q 36 190 44 196 L 64 192 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.4)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" />
             <path class="car-panel" data-panel="mirror_right" data-name="Espelho Retrovisor Dir."
                   d="M 296 176 L 320 182 Q 324 190 316 196 L 296 192 Z"
-                  preencher="url(#${prefix}-body-grad)" traço="rgba(255,255,255,0.4)" largura-do-traço="1.2" />
+                  fill="url(#${prefix}-body-grad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" />
 
-            <!-- FARÓIS E LANTERNAS TRASEIRAS -->
+            <!-- HEADLIGHTS & TAILLIGHTS -->
             <path class="car-panel" data-panel="headlight_left" data-name="Farol Frontal Esq."
                   d="M 92 50 L 128 43 L 124 58 L 94 64 Z"
-                  preenchimento="#fef08a" opacidade de preenchimento="0,88" traço="#fde047" largura do traço="1,4" />
+                  fill="#fef08a" fill-opacity="0.88" stroke="#fde047" stroke-width="1.4" />
             <path class="car-panel" data-panel="headlight_right" data-name="Farol Frontal Dir."
                   d="M 268 50 L 232 43 L 236 58 L 266 64 Z"
-                  preenchimento="#fef08a" opacidade de preenchimento="0,88" traço="#fde047" largura do traço="1,4" />
+                  fill="#fef08a" fill-opacity="0.88" stroke="#fde047" stroke-width="1.4" />
 
             <path class="car-panel" data-panel="taillight_left" data-name="Farol Traseiro Esq."
                   d="M 96 456 L 132 461 L 128 473 L 98 469 Z"
-                  preenchimento="#ef4444" opacidade de preenchimento="0,9" traço="#f87171" largura do traço="1,4" />
+                  fill="#ef4444" fill-opacity="0.9" stroke="#f87171" stroke-width="1.4" />
             <path class="car-panel" data-panel="taillight_right" data-name="Farol Traseiro Dir."
                   d="M 264 456 L 228 461 L 232 473 L 262 469 Z"
-                  preenchimento="#ef4444" opacidade de preenchimento="0,9" traço="#f87171" largura do traço="1,4" />
+                  fill="#ef4444" fill-opacity="0.9" stroke="#f87171" stroke-width="1.4" />
 
-            <!-- Grupo de sobreposição dinâmica para marcadores/etiquetas de defeito -->
+            <!-- Dynamic Overlay Group for Defect Markers/Badges -->
             <g id="${prefix}-markers-layer" pointer-events="none"></g>
         </svg>
         `;
@@ -320,7 +320,7 @@ classe Clientes {
             <div class="page-header">
                 <h1>Clientes</h1>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" id="client-search" placeholder="Pesquisar (Nome, Telefone, Matrícula, Cor, Ano)..."
+                    <input type="text" id="client-search" placeholder="Pesquisar (Nome, Telefone, Matrícula, Cor, Ano)..." 
                            style="padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); width: 320px;">
                     <button id="btn-add-client" class="btn btn-primary">+ Novo Cliente</button>
                 </div>
@@ -339,18 +339,18 @@ classe Clientes {
                             </tr>
                         </thead>
                         <tbody id="clients-list">
-                            <!-- Os clientes serão carregados aqui -->
+                            <!-- Clients will be loaded here -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Modal para Novo/Editar Cliente -->
+            <!-- Modal for New/Edit Client -->
             <div id="modal-client" class="modal hidden">
                 <div class="modal-content" style="max-width: 680px;">
                     <div class="modal-header">
                         <h2 id="modal-client-title">Novo Cliente</h2>
-                        <span class="close-modal">×</span>
+                        <span class="close-modal">&times;</span>
                     </div>
                     <form id="form-client">
                         <input type="hidden" name="id" id="client-id">
@@ -363,7 +363,7 @@ classe Clientes {
                             <input type="tel" name="phone" required>
                         </div>
                         <div class="form-group">
-                            <label>Veículos (Insira a Matrícula ou pneu 📷 Foto para preenchimento Marca/Modelo, Ano e Cor)</label>
+                            <label>Veículos (Insira a Matrícula ou tire 📷 Foto para preencher Marca/Modelo, Ano e Cor)</label>
                             <div id="new-client-vehicles-container">
                                 ${this.createVehicleEntryHtml({}, false)}
                             </div>
@@ -378,12 +378,12 @@ classe Clientes {
                 </div>
             </div>
 
-            <!-- Modal para detalhes do cliente -->
+            <!-- Modal for Client Details -->
             <div id="modal-client-details" class="modal hidden">
                 <div class="modal-content" style="max-width: 940px; height: 90vh; display:flex; flex-direction:column;">
                     <div class="modal-header">
                         <h2 id="details-client-name">Detalhes do Cliente</h2>
-                        <span class="close-modal-details">×</span>
+                        <span class="close-modal-details">&times;</span>
                     </div>
                     
                     <div class="tabs">
@@ -404,7 +404,7 @@ classe Clientes {
                                 <p id="stat-total-spent" class="stat-value">0€</p>
                             </div>
                         </div>
-                        <h3 style="margin-top:20px; margin-bottom:10px;">Tipos de serviço</h3>
+                        <h3 style="margin-top:20px; margin-bottom:10px;">Tipos de Serviço</h3>
                         <div id="stat-services-list"></div>
                     </div>
 
@@ -445,7 +445,7 @@ classe Clientes {
                             <table class="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Dados</th>
+                                        <th>Data</th>
                                         <th>Serviço</th>
                                         <th>Estado</th>
                                         <th>Notas/Motivo</th>
@@ -459,24 +459,24 @@ classe Clientes {
                     <div class="tab-content" id="tab-inspections" style="display:none;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                             <button id="btn-new-inspection" class="btn btn-primary">+ Nova Inspeção Interativa 3D</button>
-                            <span style="font-size:0.85em; color:var(--text-muted);">Registrar defeitos painel a painel no modelo 3D do veículo</span>
+                            <span style="font-size:0.85em; color:var(--text-muted);">Registe defeitos painel a painel no modelo 3D do veículo</span>
                         </div>
                         <div id="details-inspections-list" style="overflow-y:auto; max-height:60vh;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal para Inspeção 3D Interativa -->
+            <!-- Modal for Interactive 3D Inspection -->
             <div id="modal-inspection" class="modal hidden">
                 <div class="modal-content" style="max-width: 1080px; width: 96vw; max-height: 94vh;">
                     <div class="modal-header">
                         <h2>🚘 Inspeção 3D de Painéis e Estado do Veículo</h2>
-                        <span class="close-modal-inspection">×</span>
+                        <span class="close-modal-inspection">&times;</span>
                     </div>
                     <form id="form-inspection">
                         <input type="hidden" id="inspection-client-id">
 
-                        <!-- Barra superior: Seletor de veículos e pré-visualização de cores -->
+                        <!-- Top Bar: Vehicle Selector & Color Preview -->
                         <div class="inspection-vehicle-bar">
                             <div style="flex: 1; min-width: 220px;">
                                 <label style="font-size:0.82rem; color:var(--text-secondary); display:block; margin-bottom:4px;">Veículo Inspecionado</label>
@@ -489,9 +489,9 @@ classe Clientes {
                                 </select>
                             </div>
                             <div style="flex: 2; min-width: 260px;">
-                                <label style="font-size:0.82rem; color:var(--text-secondary); display:block; margin-bottom:4px;">Ferramenta Rápida (Opcional - Clique num painel para aplicar ou abrir o editor)</label>
+                                <label style="font-size:0.82rem; color:var(--text-secondary); display:block; margin-bottom:4px;">Ferramenta Rápida (Opcional - Clique num painel para aplicar ou abrir editor)</label>
                                 <div id="quick-defect-toolbar" class="quick-defect-toolbar">
-                                    <button type="button" class="defect-tool-pill active" data-tool="">🖱️Painel</button>
+                                    <button type="button" class="defect-tool-pill active" data-tool="">🖱️ Selecionar Painel</button>
                                     ${PANEL_DEFECT_TYPES.map(d => `
                                         <button type="button" class="defect-tool-pill" data-tool="${d.id}" title="${d.label}">
                                             ${d.icon} ${d.label.split(' / ')[0]}
@@ -502,7 +502,7 @@ classe Clientes {
                         </div>
 
                         <div class="inspection-3d-layout">
-                            <!-- Coluna da esquerda: Diagrama SVG interativo de carro em 3D -->
+                            <!-- Left Column: Interactive 3D Car SVG Diagram -->
                             <div class="car-3d-stage">
                                 <div class="car-3d-header">
                                     <span id="car-3d-color-indicator" class="vehicle-color-badge"></span>
@@ -513,14 +513,14 @@ classe Clientes {
                                 </div>
                             </div>
 
-                            <!-- Coluna da direita: Painel ativo do inspetor + Resumo + Lista de verificação geral + Fotos -->
+                            <!-- Right Column: Active Panel Inspector + Summary + General Checklist + Photos -->
                             <div class="inspection-controls-column">
-                                <!-- Cartão do Editor de Painel Ativo -->
+                                <!-- Active Panel Editor Card -->
                                 <div id="panel-editor-card" class="panel-editor-card">
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                         <div>
                                             <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-primary);">Painel Selecionado</span>
-                                            <h3 id="selected-panel-title" style="margin:2px 0 0 0; font-size:1.05rem;">Clique no painel do carro 3D 👈</h3>
+                                            <h3 id="selected-panel-title" style="margin:2px 0 0 0; font-size:1.05rem;">Clique num painel do carro 3D 👈</h3>
                                         </div>
                                         <button type="button" id="btn-clear-panel" class="btn btn-danger hidden" style="padding:4px 10px; font-size:0.78rem;">Limpar Painel</button>
                                     </div>
@@ -533,12 +533,12 @@ classe Clientes {
                                         `).join('')}
                                     </div>
                                     <div style="margin-top:10px;">
-                                        <input type="text" id="selected-panel-note" placeholder="Nota específica deste painel (ex: Risco fundo de 10cm junto ao puxador)..." desativado
+                                        <input type="text" id="selected-panel-note" placeholder="Nota específica deste painel (ex: Risco fundo de 10cm junto ao puxador)..." disabled
                                                style="width:100%; padding:8px 10px; border-radius:6px; background:var(--bg-input); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.88rem;">
                                     </div>
                                 </div>
 
-                                <!-- Lista de painéis marcados -->
+                                <!-- Marked Panels List -->
                                 <div class="marked-panels-box">
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                                         <h4 style="margin:0; font-size:0.92rem;">📍 Painéis com Defeitos Assinalados (<span id="marked-panels-count">0</span>)</h4>
@@ -549,13 +549,13 @@ classe Clientes {
                                     </div>
                                 </div>
 
-                                <!-- Lista de verificação clássica + notas + fotos -->
+                                <!-- Classic Checklist + Notes + Photos -->
                                 <div class="inspection-bottom-grid">
                                     <div class="checklist-section">
-                                        <h4 style="margin:0 0 8px 0; font-size:0.92rem;">Lista de verificação geral</h4>
+                                        <h4 style="margin:0 0 8px 0; font-size:0.92rem;">Checklist Geral</h4>
                                         <div class="form-group checklist-compact">
                                             <label><input type="checkbox" name="defect_scratches"> Riscos / Pintura</label>
-                                            <label><input type="checkbox" name="defect_dents"> Amolgadalas</label>
+                                            <label><input type="checkbox" name="defect_dents"> Amolgadelas</label>
                                             <label><input type="checkbox" name="defect_lights"> Luzes / Faróis</label>
                                             <label><input type="checkbox" name="defect_glass"> Vidros / Para-brisas</label>
                                             <label><input type="checkbox" name="defect_wheels"> Pneus / Jantes</label>
@@ -564,7 +564,7 @@ classe Clientes {
                                         </div>
                                     </div>
                                     <div class="photos-section">
-                                        <h4 style="margin:0 0 8px 0; font-size:0.92rem;">Notas e Fotos</h4>
+                                        <h4 style="margin:0 0 8px 0; font-size:0.92rem;">Notas & Fotos</h4>
                                         <textarea name="notes" rows="3" placeholder="Observações gerais da inspeção..." style="width:100%; padding:8px; border-radius:6px; background:var(--bg-input); border:1px solid var(--border-color); color:var(--text-primary); margin-bottom:8px; font-size:0.88rem;"></textarea>
                                         <label for="inspection-photos" class="btn btn-secondary" style="display:inline-block; cursor:pointer; padding:6px 12px; font-size:0.85rem;">
                                             📷 Adicionar Fotos
@@ -584,12 +584,12 @@ classe Clientes {
                 </div>
             </div>
 
-            <!-- Modal para visualização do mapa de inspeção 3D salvo -->
+            <!-- Modal for Viewing Saved 3D Inspection Map -->
             <div id="modal-view-3d-inspection" class="modal hidden" style="z-index: 1050;">
                 <div class="modal-content" style="max-width: 760px; width: 94vw;">
                     <div class="modal-header">
                         <h2 id="view-3d-modal-title">Mapa 3D da Inspeção</h2>
-                        <span class="close-modal-view-3d" style="cursor:pointer; font-size:24px;">×</span>
+                        <span class="close-modal-view-3d" style="cursor:pointer; font-size:24px;">&times;</span>
                     </div>
                     <div style="display:grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start;">
                         <div class="car-3d-stage" style="padding:10px;">
@@ -607,10 +607,10 @@ classe Clientes {
                 </div>
             </div>
 
-            <!-- Modal para pré-visualização da foto -->
+            <!-- Modal for Photo Preview -->
             <div id="modal-photo-preview" class="modal hidden" style="z-index: 1100;">
                 <div class="modal-content" style="background: transparent; box-shadow: none; border: none; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
-                    <span class="close-modal-photo" style="position: absolute; top: 20px; right: 20px; color: white; font-size: 40px; cursor: pointer; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">×</span>
+                    <span class="close-modal-photo" style="position: absolute; top: 20px; right: 20px; color: white; font-size: 40px; cursor: pointer; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">&times;</span>
                     <img id="preview-image" src="" style="max-width: 100%; max-height: 90vh; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
                 </div>
             </div>
@@ -626,38 +626,38 @@ classe Clientes {
         if (!style) {
             style = document.createElement('style');
             style.id = 'page-styles';
-            document.head.appendChild(estilo);
+            document.head.appendChild(style);
         }
         style.textContent = `
             .page-header {
                 display: flex;
-                justify-content: espaço-entre;
+                justify-content: space-between;
                 align-items: center;
-                margem-inferior: var(--espaçamento-lg);
+                margin-bottom: var(--spacing-lg);
             }
             
             .data-table {
-                largura: 100%;
+                width: 100%;
                 border-collapse: collapse;
             }
             
             .data-table th, .data-table td {
-                preenchimento: 12px;
-                alinhamento de texto: esquerda;
-                borda-inferior: 1px sólida var(--border-color);
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid var(--border-color);
             }
             
             .data-table th {
-                cor: var(--texto-secundário);
-                Peso da fonte: 500;
+                color: var(--text-secondary);
+                font-weight: 500;
             }
             
             .modal {
-                posição: fixa;
-                topo: 0;
-                esquerda: 0;
-                largura: 100%;
-                altura: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
                 background: rgba(0,0,0,0.75);
                 display: flex;
                 justify-content: center;
@@ -671,130 +671,130 @@ classe Clientes {
             }
             
             .modal-content {
-                fundo: var(--bg-card);
-                preenchimento: 24px;
+                background: var(--bg-card);
+                padding: 24px;
                 border-radius: 12px;
-                largura: 100%;
-                largura máxima: 500px;
-                borda: 1px var sólido (--border-color);
+                width: 100%;
+                max-width: 500px;
+                border: 1px solid var(--border-color);
                 box-shadow: var(--shadow-card);
-                altura máxima: 90vh;
+                max-height: 90vh;
                 overflow-y: auto;
             }
             
             .modal-header {
                 display: flex;
-                justify-content: espaço-entre;
+                justify-content: space-between;
                 align-items: center;
-                margem inferior: 16px;
+                margin-bottom: 16px;
             }
             
             .close-modal, .close-modal-inspection, .close-modal-details {
-                cursor: ponteiro;
-                tamanho da fonte: 24px;
+                cursor: pointer;
+                font-size: 24px;
             }
             
             .form-group {
-                margem inferior: 16px;
+                margin-bottom: 16px;
             }
             
-            Rótulo .form-group {
+            .form-group label {
                 display: block;
-                margem inferior: 8px;
-                cor: var(--texto-secundário);
+                margin-bottom: 8px;
+                color: var(--text-secondary);
             }
             
             .form-group input, .vehicle-color-select {
-                largura: 100%;
-                preenchimento: 8px 10px;
+                width: 100%;
+                padding: 8px 10px;
                 border-radius: 6px;
-                borda: 1px var sólido (--border-color);
+                border: 1px solid var(--border-color);
                 background: var(--bg-input);
-                cor: var(--text-primary);
+                color: var(--text-primary);
             }
             
             .form-actions {
                 display: flex;
                 justify-content: flex-end;
-                espaço: 12px;
-                margem superior: 24px;
+                gap: 12px;
+                margin-top: 24px;
             }
             
             .btn-secondary {
-                fundo: transparente;
-                borda: 1px var sólido (--border-color);
-                cor: var(--text-primary);
+                background: transparent;
+                border: 1px solid var(--border-color);
+                color: var(--text-primary);
             }
 
             .btn-danger {
-                cor de fundo: rgba(255, 69, 58, 0.12);
-                cor: var(--accent-danger);
-                preenchimento: 6px 12px;
-                tamanho da fonte: 0,9rem;
+                background-color: rgba(255, 69, 58, 0.12);
+                color: var(--accent-danger);
+                padding: 6px 12px;
+                font-size: 0.9rem;
             }
             .btn-danger:hover {
-                cor de fundo: rgba(255, 69, 58, 0.24);
+                background-color: rgba(255, 69, 58, 0.24);
             }
             
             .btn-inspection {
-                cor de fundo: rgba(255, 255, 255, 0.1);
-                cor: var(--text-primary);
-                preenchimento: 6px 12px;
-                tamanho da fonte: 0,9rem;
-                margem-direita: 8px;
+                background-color: rgba(255, 255, 255, 0.1);
+                color: var(--text-primary);
+                padding: 6px 12px;
+                font-size: 0.9rem;
+                margin-right: 8px;
             }
             .btn-inspection:hover {
-                cor de fundo: rgba(255, 255, 255, 0.2);
+                background-color: rgba(255, 255, 255, 0.2);
             }
 
-            /* Emblemas de cor e ano do veículo */
+            /* Vehicle Color & Year Badges */
             .vehicle-color-badge {
                 display: inline-flex;
                 align-items: center;
-                espaço: 6px;
-                preenchimento: 2px 8px;
+                gap: 6px;
+                padding: 2px 8px;
                 border-radius: 999px;
-                tamanho da fonte: 0,78rem;
+                font-size: 0.78rem;
                 background: rgba(255,255,255,0.07);
-                borda: 1px sólida rgba(255,255,255,0.12);
-                cor: var(--text-primary);
-                alinhamento vertical: meio;
+                border: 1px solid rgba(255,255,255,0.12);
+                color: var(--text-primary);
+                vertical-align: middle;
             }
             .vehicle-color-dot {
-                largura: 10px;
-                altura: 10px;
+                width: 10px;
+                height: 10px;
                 border-radius: 50%;
-                borda: 1px sólida #fff;
+                border: 1px solid #fff;
                 display: inline-block;
             }
             .vehicle-year-badge {
                 display: inline-block;
-                preenchimento: 1px 6px;
+                padding: 1px 6px;
                 border-radius: 4px;
-                tamanho da fonte: 0,76rem;
-                fundo: rgba(10, 132, 255, 0.15);
-                cor: #60a5fa;
-                margem esquerda: 5px;
-                Peso da fonte: 600;
+                font-size: 0.76rem;
+                background: rgba(10, 132, 255, 0.15);
+                color: #60a5fa;
+                margin-left: 5px;
+                font-weight: 600;
             }
 
-            /* Tabulações */
+            /* Tabs */
             .tabs {
                 display: flex;
-                borda-inferior: 1px sólida var(--border-color);
-                margem inferior: 20px;
+                border-bottom: 1px solid var(--border-color);
+                margin-bottom: 20px;
             }
             .tab-btn {
-                preenchimento: 10px 20px;
-                fundo: transparente;
-                borda: nenhuma;
-                cor: var(--texto-secundário);
-                cursor: ponteiro;
-                tamanho da fonte: 1rem;
-                borda inferior: 2px sólida transparente;
+                padding: 10px 20px;
+                background: transparent;
+                border: none;
+                color: var(--text-secondary);
+                cursor: pointer;
+                font-size: 1rem;
+                border-bottom: 2px solid transparent;
             }
             .tab-btn.active {
-                cor: var(--accent-primary);
+                color: var(--accent-primary);
                 border-bottom-color: var(--accent-primary);
             }
             .tab-content {
@@ -802,66 +802,66 @@ classe Clientes {
                 overflow-y: auto;
             }
             .stats-grid {
-                exibição: grade;
+                display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                espaço: 20px;
-                margem inferior: 20px;
+                gap: 20px;
+                margin-bottom: 20px;
             }
             .stat-card {
                 background: rgba(255,255,255,0.05);
-                preenchimento: 20px;
+                padding: 20px;
                 border-radius: 8px;
-                alinhamento de texto: centralizado;
+                text-align: center;
             }
             .stat-value {
-                tamanho da fonte: 2rem;
-                Peso da fonte: negrito;
-                cor: var(--accent-primary);
-                margem: 10px 0 0 0;
+                font-size: 2rem;
+                font-weight: bold;
+                color: var(--accent-primary);
+                margin: 10px 0 0 0;
             }
 
-            /* Layout do Inspetor de Carros 3D */
-            .barra-de-inspeção-de-veículos {
+            /* 3D Car Inspector Layout */
+            .inspection-vehicle-bar {
                 display: flex;
-                flex-wrap: envolver;
-                espaço: 12px;
+                flex-wrap: wrap;
+                gap: 12px;
                 background: rgba(255,255,255,0.03);
-                borda: 1px var sólido (--border-color);
-                preenchimento: 12px;
+                border: 1px solid var(--border-color);
+                padding: 12px;
                 border-radius: 10px;
-                margem inferior: 16px;
+                margin-bottom: 16px;
                 align-items: flex-end;
             }
             .quick-defect-toolbar {
                 display: flex;
-                flex-wrap: envolver;
-                espaço: 6px;
+                flex-wrap: wrap;
+                gap: 6px;
             }
             .defect-tool-pill {
-                preenchimento: 5px 10px;
+                padding: 5px 10px;
                 border-radius: 999px;
-                borda: 1px var sólido (--border-color);
+                border: 1px solid var(--border-color);
                 background: rgba(255,255,255,0.04);
-                cor: var(--texto-secundário);
-                tamanho da fonte: 0,78rem;
-                cursor: ponteiro;
-                transição: todos os 0,15s de facilidade;
+                color: var(--text-secondary);
+                font-size: 0.78rem;
+                cursor: pointer;
+                transition: all 0.15s ease;
             }
             .defect-tool-pill:hover {
                 background: rgba(255,255,255,0.1);
-                cor: var(--text-primary);
+                color: var(--text-primary);
             }
             .defect-tool-pill.active {
-                fundo: rgba(10, 132, 255, 0.22);
+                background: rgba(10, 132, 255, 0.22);
                 border-color: var(--accent-primary);
-                cor: #fff;
-                Peso da fonte: 600;
+                color: #fff;
+                font-weight: 600;
             }
 
             .inspection-3d-layout {
-                exibição: grade;
+                display: grid;
                 grid-template-columns: 350px 1fr;
-                espaço: 20px;
+                gap: 20px;
                 align-items: start;
             }
             @media (max-width: 860px) {
@@ -871,157 +871,157 @@ classe Clientes {
             }
 
             .car-3d-stage {
-                fundo: gradiente radial(círculo em 50% 45%, rgba(30, 41, 59, 0.75), rgba(9, 13, 22, 0.95));
-                borda: 1px var sólido (--border-color);
+                background: radial-gradient(circle at 50% 45%, rgba(30, 41, 59, 0.75), rgba(9, 13, 22, 0.95));
+                border: 1px solid var(--border-color);
                 border-radius: 12px;
-                preenchimento: 12px;
+                padding: 12px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
             }
             .car-3d-header {
-                largura: 100%;
+                width: 100%;
                 display: flex;
-                justify-content: espaço-entre;
+                justify-content: space-between;
                 align-items: center;
-                margem inferior: 8px;
+                margin-bottom: 8px;
             }
             .car-svg-wrapper {
-                largura: 100%;
-                largura máxima: 330px;
+                width: 100%;
+                max-width: 330px;
             }
             .car-3d-svg {
-                largura: 100%;
-                altura: automática;
+                width: 100%;
+                height: auto;
                 display: block;
                 user-select: none;
             }
             .car-panel {
-                cursor: ponteiro;
-                transição: filtro 0,18s de suavização, largura do traço 0,18s de suavização, traço 0,18s de suavização;
+                cursor: pointer;
+                transition: filter 0.18s ease, stroke-width 0.18s ease, stroke 0.18s ease;
             }
             .car-panel:hover {
-                filtro: brilho(1,22);
-                traço: #38bdf8 !importante;
-                largura do traço: 2,2px !importante;
+                filter: brightness(1.22);
+                stroke: #38bdf8 !important;
+                stroke-width: 2.2px !important;
             }
             .car-panel.panel-selected {
-                traço: #0a84ff !importante;
-                largura do traço: 3px !importante;
-                filtro: brilho(1.25) sombra-projetada(0 0 6px rgba(10, 132, 255, 0.75));
+                stroke: #0a84ff !important;
+                stroke-width: 3px !important;
+                filter: brightness(1.25) drop-shadow(0 0 6px rgba(10, 132, 255, 0.75));
             }
             .car-panel.panel-has-defect {
-                largura do traço: 2,5px !importante;
+                stroke-width: 2.5px !important;
             }
 
-            .coluna-de-controles-de-inspeção {
+            .inspection-controls-column {
                 display: flex;
                 flex-direction: column;
-                espaço: 14px;
+                gap: 14px;
             }
             .panel-editor-card {
                 background: rgba(255,255,255,0.04);
-                borda: 1px var sólido (--border-color);
+                border: 1px solid var(--border-color);
                 border-radius: 10px;
-                preenchimento: 14px;
+                padding: 14px;
             }
             .panel-defect-buttons {
-                exibição: grade;
+                display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-                espaço: 8px;
+                gap: 8px;
             }
             .panel-defect-buttons.disabled-area {
-                opacidade: 0,45;
+                opacity: 0.45;
                 pointer-events: none;
             }
             .panel-defect-chip {
                 display: flex;
                 align-items: center;
-                espaço: 8px;
-                preenchimento: 8px 10px;
+                gap: 8px;
+                padding: 8px 10px;
                 border-radius: 8px;
-                borda: 1px var sólido (--border-color);
+                border: 1px solid var(--border-color);
                 background: rgba(255,255,255,0.03);
-                cor: var(--text-primary);
-                tamanho da fonte: 0,83rem;
-                cursor: ponteiro;
-                alinhamento de texto: esquerda;
-                transição: todos os 0,15s de facilidade;
+                color: var(--text-primary);
+                font-size: 0.83rem;
+                cursor: pointer;
+                text-align: left;
+                transition: all 0.15s ease;
             }
             .panel-defect-chip:hover {
                 background: rgba(255,255,255,0.09);
             }
             .panel-defect-chip.active {
-                fundo: rgba(255, 69, 58, 0.22);
-                cor da borda: #ff453a;
-                Peso da fonte: 600;
+                background: rgba(255, 69, 58, 0.22);
+                border-color: #ff453a;
+                font-weight: 600;
                 box-shadow: 0 0 0 1px rgba(255, 69, 58, 0.4);
             }
 
             .marked-panels-box {
                 background: rgba(255,255,255,0.03);
-                borda: 1px var sólido (--border-color);
+                border: 1px solid var(--border-color);
                 border-radius: 10px;
-                preenchimento: 12px;
+                padding: 12px;
             }
             .panel-defects-summary-list {
-                altura máxima: 155px;
+                max-height: 155px;
                 overflow-y: auto;
                 display: flex;
                 flex-direction: column;
-                espaço: 6px;
+                gap: 6px;
             }
             .marked-panel-row {
                 display: flex;
-                justify-content: espaço-entre;
+                justify-content: space-between;
                 align-items: center;
-                espaço: 8px;
-                preenchimento: 6px 10px;
+                gap: 8px;
+                padding: 6px 10px;
                 border-radius: 6px;
                 background: rgba(255,255,255,0.04);
-                borda-esquerda: 3px sólida var(--accent-danger);
-                tamanho da fonte: 0,84rem;
-                cursor: ponteiro;
+                border-left: 3px solid var(--accent-danger);
+                font-size: 0.84rem;
+                cursor: pointer;
             }
             .marked-panel-row:hover {
                 background: rgba(255,255,255,0.08);
             }
 
             .inspection-bottom-grid {
-                exibição: grade;
+                display: grid;
                 grid-template-columns: 1fr 1fr;
-                espaço: 14px;
+                gap: 14px;
                 background: rgba(255,255,255,0.02);
-                borda: 1px var sólido (--border-color);
+                border: 1px solid var(--border-color);
                 border-radius: 10px;
-                preenchimento: 12px;
+                padding: 12px;
             }
-            Rótulo .checklist-compact {
+            .checklist-compact label {
                 display: flex;
                 align-items: center;
-                espaço: 8px;
-                margem inferior: 5px;
-                tamanho da fonte: 0,86rem;
-                cursor: ponteiro;
+                gap: 8px;
+                margin-bottom: 5px;
+                font-size: 0.86rem;
+                cursor: pointer;
             }
             .checklist-compact input[type="checkbox"] {
-                largura: automática;
+                width: auto;
             }
         `;
     }
 
-    aplicarCorCarro3D(nomeDaCor, prefixo = 'insp') {
+    applyCar3DColor(colorName, prefix = 'insp') {
         const meta = this.getColorMeta(colorName);
         const svg = document.getElementById(`${prefix}-car-svg`);
-        Se (!svg) retornar;
+        if (!svg) return;
 
         svg.querySelectorAll('.car-stop-shadow').forEach(el => el.setAttribute('stop-color', meta.shadow));
         svg.querySelectorAll('.car-stop-base').forEach(el => el.setAttribute('stop-color', meta.hex));
         svg.querySelectorAll('.car-stop-highlight').forEach(el => el.setAttribute('stop-color', meta.highlight));
 
-        se (prefixo === 'insp') {
+        if (prefix === 'insp') {
             const indicator = document.getElementById('car-3d-color-indicator');
-            if (indicador) {
+            if (indicator) {
                 indicator.innerHTML = `<span class="vehicle-color-dot" style="background:${meta.hex}; border-color:${meta.border};"></span> ${meta.label}`;
             }
         }
@@ -1030,24 +1030,24 @@ classe Clientes {
     renderCar3DMarkers(panelDefects = {}, prefix = 'insp') {
         const svg = document.getElementById(`${prefix}-car-svg`);
         const markersLayer = document.getElementById(`${prefix}-markers-layer`);
-        se (!svg || !markersLayer) retorne;
+        if (!svg || !markersLayer) return;
 
         markersLayer.innerHTML = '';
 
         svg.querySelectorAll('.car-panel').forEach(panelEl => {
             const pid = panelEl.dataset.panel;
-            const entrada = painelDefeitos[pid];
+            const entry = panelDefects[pid];
             const hasDefects = entry && ((entry.types && entry.types.length > 0) || (entry.note && entry.note.trim()));
 
             panelEl.classList.toggle('panel-has-defect', Boolean(hasDefects));
-            se (prefixo === 'insp') {
+            if (prefix === 'insp') {
                 panelEl.classList.toggle('panel-selected', pid === this.selectedPanelId);
             }
 
             if (hasDefects) {
                 const firstType = entry.types && entry.types.length > 0
                     ? PANEL_DEFECT_TYPES.find(t => t.id === entry.types[0])
-                    : nulo;
+                    : null;
                 const badgeColor = firstType ? firstType.color : '#ff453a';
                 panelEl.style.stroke = badgeColor;
 
@@ -1076,13 +1076,13 @@ classe Clientes {
         const clearBtn = document.getElementById('btn-clear-panel');
 
         if (!panelMeta) {
-            titleEl.textContent = 'Clique no painel do carro 3D 👈';
+            titleEl.textContent = 'Clique num painel do carro 3D 👈';
             buttonsBox.classList.add('disabled-area');
             noteInput.disabled = true;
             noteInput.value = '';
             clearBtn.classList.add('hidden');
             this.renderCar3DMarkers(this.currentPanelDefects, 'insp');
-            retornar;
+            return;
         }
 
         titleEl.textContent = panelMeta.name;
@@ -1104,9 +1104,9 @@ classe Clientes {
     }
 
     togglePanelDefectType(panelId, defectId) {
-        Se (!panelId) retornar;
+        if (!panelId) return;
         const panelMeta = CAR_PANELS.find(p => p.id === panelId);
-        Se (!panelMeta) retornar;
+        if (!panelMeta) return;
 
         if (!this.currentPanelDefects[panelId]) {
             this.currentPanelDefects[panelId] = { name: panelMeta.name, types: [], note: '' };
@@ -1114,13 +1114,13 @@ classe Clientes {
 
         const entry = this.currentPanelDefects[panelId];
         const idx = entry.types.indexOf(defectId);
-        se (idx === -1) {
+        if (idx === -1) {
             entry.types.push(defectId);
         } else {
             entry.types.splice(idx, 1);
         }
 
-        se (entry.types.length === 0 && (!entry.note || !entry.note.trim())) {
+        if (entry.types.length === 0 && (!entry.note || !entry.note.trim())) {
             delete this.currentPanelDefects[panelId];
         }
 
@@ -1130,9 +1130,9 @@ classe Clientes {
     }
 
     updatePanelNote(panelId, noteText) {
-        Se (!panelId) retornar;
+        if (!panelId) return;
         const panelMeta = CAR_PANELS.find(p => p.id === panelId);
-        Se (!panelMeta) retornar;
+        if (!panelMeta) return;
 
         if (!this.currentPanelDefects[panelId]) {
             this.currentPanelDefects[panelId] = { name: panelMeta.name, types: [], note: '' };
@@ -1140,7 +1140,7 @@ classe Clientes {
         this.currentPanelDefects[panelId].note = noteText;
 
         const entry = this.currentPanelDefects[panelId];
-        se ((!entry.types || entry.types.length === 0) && (!entry.note || !entry.note.trim())) {
+        if ((!entry.types || entry.types.length === 0) && (!entry.note || !entry.note.trim())) {
             delete this.currentPanelDefects[panelId];
         }
 
@@ -1150,13 +1150,13 @@ classe Clientes {
 
     syncChecklistFromPanels() {
         const form = document.getElementById('form-inspection');
-        Se (!formulário) retornar;
+        if (!form) return;
 
-        const activeChecklistKeys = novo Set();
+        const activeChecklistKeys = new Set();
         Object.values(this.currentPanelDefects).forEach(entry => {
             (entry.types || []).forEach(tId => {
                 const dMeta = PANEL_DEFECT_TYPES.find(d => d.id === tId);
-                se (dMeta && dMeta.checklistKey) {
+                if (dMeta && dMeta.checklistKey) {
                     activeChecklistKeys.add(dMeta.checklistKey);
                 }
             });
@@ -1164,21 +1164,21 @@ classe Clientes {
 
         activeChecklistKeys.forEach(chkName => {
             const checkbox = form.elements[chkName];
-            se (checkbox) checkbox.checked = true;
+            if (checkbox) checkbox.checked = true;
         });
     }
 
     renderMarkedPanelsSummary() {
         const listEl = document.getElementById('panel-defects-summary-list');
         const countEl = document.getElementById('marked-panels-count');
-        se (!listEl || !countEl) retorne;
+        if (!listEl || !countEl) return;
 
         const entries = Object.entries(this.currentPanelDefects);
         countEl.textContent = entries.length;
 
-        se (entradas.comprimento === 0) {
+        if (entries.length === 0) {
             listEl.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; margin:4px 0;">Nenhum painel com defeito assinalado. Clique no modelo 3D para marcar.</p>`;
-            retornar;
+            return;
         }
 
         listEl.innerHTML = entries.map(([pid, data]) => {
@@ -1187,11 +1187,11 @@ classe Clientes {
                 return meta ? `<span style="font-size:0.78rem; background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:4px;">${meta.icon} ${meta.label}</span>` : '';
             }).join(' ');
 
-            retornar `
+            return `
                 <div class="marked-panel-row" onclick="window.focusInspectorPanel('${pid}')">
                     <div>
                         <strong>${data.name}</strong>
-                        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:3px;">${badges}
+                        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:3px;">${badges}</div>
                         ${data.note ? `<div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">📝 "${data.note}"</div>` : ''}
                     </div>
                     <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="event.stopPropagation(); window.removeInspectorPanel('${pid}')">✕</button>
@@ -1200,11 +1200,11 @@ classe Clientes {
         }).join('');
     }
 
-    carregarClientes(filtro = '') {
-        const clientes = loja.getClientes();
+    loadClients(filter = '') {
+        const clients = store.getClients();
         const tbody = document.getElementById('clients-list');
 
-        const clientesFiltrados = clientes.filter(cliente => {
+        const filteredClients = clients.filter(client => {
             const searchTerm = filter.toLowerCase();
             const nameMatch = client.name.toLowerCase().includes(searchTerm);
             const phoneMatch = client.phone.includes(searchTerm);
@@ -1215,18 +1215,18 @@ classe Clientes {
                 (v.color && v.color.toLowerCase().includes(searchTerm))
             );
 
-            retornar nomeCorrespondente || telefoneCorrespondente || veículoCorrespondente;
+            return nameMatch || phoneMatch || vehicleMatch;
         });
 
-        se (filteredClients.length === 0) {
+        if (filteredClients.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: var(--text-muted);">Nenhum cliente encontrado.</td></tr>';
-            retornar;
+            return;
         }
 
         tbody.innerHTML = filteredClients.map(client => {
             const vehiclesCount = client.vehicles ? client.vehicles.length : 0;
-            seja primaryVehicle = '-';
-            se (veículosCount > 0) {
+            let primaryVehicle = '-';
+            if (vehiclesCount > 0) {
                 const v0 = client.vehicles[0];
                 const resolvedYear = v0.year || (typeof PlateLookupService !== 'undefined' && v0.plate ? PlateLookupService.estimateYearFromPlate(v0.plate) : '');
                 const resolvedColor = v0.color || (typeof PlateLookupService !== 'undefined' && v0.model ? PlateLookupService.inferColorFromModelName(v0.model) : '');
@@ -1234,11 +1234,11 @@ classe Clientes {
                 const colorHtml = resolvedColor ? `<span style="margin-left:6px;">${this.renderColorBadge(resolvedColor)}</span>` : '';
                 primaryVehicle = `<strong>${v0.model}</strong> ${yearHtml} ${colorHtml}`;
             }
-            const exibiçãoDeVeículos = contagemDeVeículos > 1
+            const vehicleDisplay = vehiclesCount > 1
                 ? `${primaryVehicle} <span style="font-size:0.8em; color:var(--text-muted); margin-left:4px;">+${vehiclesCount - 1}</span>`
-                : veículoPrincipal;
+                : primaryVehicle;
 
-            retornar `
+            return `
             <tr>
                 <td>${client.name}</td>
                 <td>${client.phone}</td>
@@ -1253,18 +1253,18 @@ classe Clientes {
             `;
         }).join('');
 
-        // Expor a função de exclusão globalmente
-        janela.excluirCliente = (id) => {
-            if (confirm('Tem certeza de que deseja remover este cliente?')) {
+        // Expose delete function globally
+        window.deleteClient = (id) => {
+            if (confirm('Tem a certeza que deseja remover este cliente?')) {
                 store.deleteClient(id);
                 this.loadClients(document.getElementById('client-search').value);
             }
         };
 
-        // Expor a função de edição globalmente
-        janela.editClient = (id) => {
+        // Expose edit function globally
+        window.editClient = (id) => {
             const client = store.getClients().find(c => c.id === id);
-            Se (!cliente) retornar;
+            if (!client) return;
 
             document.getElementById('modal-client-title').textContent = 'Editar Cliente';
             document.getElementById('client-id').value = client.id;
@@ -1276,7 +1276,7 @@ classe Clientes {
             const container = document.getElementById('new-client-vehicles-container');
             container.innerHTML = '';
 
-            se (cliente.veículos && cliente.veículos.comprimento > 0) {
+            if (client.vehicles && client.vehicles.length > 0) {
                 container.innerHTML = client.vehicles.map((v, idx) =>
                     this.createVehicleEntryHtml(v, idx > 0 || client.vehicles.length > 1)
                 ).join('');
@@ -1287,11 +1287,11 @@ classe Clientes {
             document.getElementById('modal-client').classList.remove('hidden');
         };
 
-        // Função para expor detalhes abertos
+        // Expose open details function
         window.openClientDetails = (clientId) => {
             this.currentClientId = clientId;
             const client = store.getClients().find(c => c.id === clientId);
-            Se (!cliente) retornar;
+            if (!client) return;
 
             document.getElementById('details-client-name').textContent = client.name;
             document.getElementById('modal-client-details').classList.remove('hidden');
@@ -1307,15 +1307,15 @@ classe Clientes {
         const client = store.getClients().find(c => c.id === clientId);
         const container = document.getElementById('details-vehicles-list');
 
-        se (!cliente || !cliente.veículos || cliente.veículos.comprimento === 0) {
-            container.innerHTML = '<p>Sem veículos registrados.</p>';
-            retornar;
+        if (!client || !client.vehicles || client.vehicles.length === 0) {
+            container.innerHTML = '<p>Sem veículos registados.</p>';
+            return;
         }
 
         container.innerHTML = client.vehicles.map((v, index) => {
             const resolvedYear = v.year || (typeof PlateLookupService !== 'undefined' && v.plate ? (PlateLookupService.estimateYearFromPlate(v.plate) || '') : '');
             const resolvedColor = v.color || (typeof PlateLookupService !== 'undefined' && v.model ? (PlateLookupService.inferColorFromModelName(v.model) || '') : '');
-            retornar `
+            return `
             <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; margin-bottom:8px; gap:10px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                     <strong style="font-size:1.02rem;">${v.model}</strong>
@@ -1335,9 +1335,9 @@ classe Clientes {
             </div>
         `}).join('');
 
-        janela.atualizarCorDoVeículoCliente = (cId, vIndex, novaCor) => {
+        window.updateClientVehicleColor = (cId, vIndex, newColor) => {
             const c = store.getClients().find(cl => cl.id === cId);
-            if (c && c.veículos && c.veículos[vIndex]) {
+            if (c && c.vehicles && c.vehicles[vIndex]) {
                 c.vehicles[vIndex].color = newColor;
                 store.updateClient(c);
                 this.loadClientVehicles(cId);
@@ -1345,9 +1345,9 @@ classe Clientes {
             }
         };
 
-        janela.atualizarAnoDoVeículoCliente = (cId, vIndex, novoAno) => {
+        window.updateClientVehicleYear = (cId, vIndex, newYear) => {
             const c = store.getClients().find(cl => cl.id === cId);
-            if (c && c.veículos && c.veículos[vIndex]) {
+            if (c && c.vehicles && c.vehicles[vIndex]) {
                 c.vehicles[vIndex].year = newYear.trim();
                 store.updateClient(c);
                 this.loadClientVehicles(cId);
@@ -1355,7 +1355,7 @@ classe Clientes {
             }
         };
 
-        janela.removerVeículoCliente = (cId, vIndex) => {
+        window.removeClientVehicle = (cId, vIndex) => {
             if (confirm('Remover este veículo?')) {
                 const c = store.getClients().find(cl => cl.id === cId);
                 c.vehicles.splice(vIndex, 1);
@@ -1370,39 +1370,39 @@ classe Clientes {
         const appointments = store.getAppointments().filter(a => a.clientId === clientId && (a.status === 'completed' || a.status === 'paid'));
         const services = store.getServices();
 
-        // Total de lavagens
+        // Total Washes
         document.getElementById('stat-total-washes').textContent = appointments.length;
 
-        seja totalGasto = 0;
+        let totalSpent = 0;
         const serviceCounts = {};
 
         appointments.forEach(appt => {
-            seja preço = 0;
-            if (appt.finalPrice !== indefinido && appt.finalPrice !== null && appt.finalPrice !== '') {
-                preço = parseFloat(appt.finalPrice);
+            let price = 0;
+            if (appt.finalPrice !== undefined && appt.finalPrice !== null && appt.finalPrice !== '') {
+                price = parseFloat(appt.finalPrice);
             } else {
-                se (appt.serviceIds && appt.serviceIds.length > 0) {
+                if (appt.serviceIds && appt.serviceIds.length > 0) {
                     appt.serviceIds.forEach(id => {
                         const s = services.find(srv => srv.id === id);
-                        se (s) preço += parseFloat(s.preço);
+                        if (s) price += parseFloat(s.price);
                     });
                 } else if (appt.serviceId) {
                     const s = services.find(srv => srv.id === appt.serviceId);
-                    se (s) preço += parseFloat(s.preço);
+                    if (s) price += parseFloat(s.price);
                 }
             }
-            TotalGasto += preço;
+            totalSpent += price;
 
-            se (appt.serviceIds && appt.serviceIds.length > 0) {
+            if (appt.serviceIds && appt.serviceIds.length > 0) {
                 appt.serviceIds.forEach(id => {
                     const s = services.find(srv => srv.id === id);
-                    const nome=s? s.name : 'Serviço Removido';
-                    serviceCounts[nome] = (serviceCounts[nome] || 0) + 1;
+                    const name = s ? s.name : 'Serviço Removido';
+                    serviceCounts[name] = (serviceCounts[name] || 0) + 1;
                 });
             } else {
                 const service = services.find(s => s.id === appt.serviceId);
-                const serviceName = serviço? service.name : (appt.serviceId ? 'Serviço Removido' : 'Desconhecido');
-                se (appt.serviceId || serviço) {
+                const serviceName = service ? service.name : (appt.serviceId ? 'Serviço Removido' : 'Desconhecido');
+                if (appt.serviceId || service) {
                     serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
                 }
             }
@@ -1412,7 +1412,7 @@ classe Clientes {
 
         const servicesList = document.getElementById('stat-services-list');
         servicesList.innerHTML = Object.entries(serviceCounts)
-            .map(([nome, contagem]) => `
+            .map(([name, count]) => `
                 <div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid var(--border-color);">
                     <span>${name}</span>
                     <span style="font-weight:bold;">${count}</span>
@@ -1425,19 +1425,19 @@ classe Clientes {
         const services = store.getServices();
         const tbody = document.getElementById('details-history-list');
 
-        compromissos.sort((a, b) => new Date(b.date) - new Date(a.date));
+        appointments.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         tbody.innerHTML = appointments.map(appt => {
             let serviceName = 'Serviço Removido';
 
-            se (appt.serviceIds && appt.serviceIds.length > 0) {
+            if (appt.serviceIds && appt.serviceIds.length > 0) {
                 serviceName = appt.serviceIds.map(id => {
                     const s = services.find(srv => srv.id === id);
-                    retornar é? s.name : 'Serviço Removido';
+                    return s ? s.name : 'Serviço Removido';
                 }).join(', ');
             } else {
                 const service = services.find(s => s.id === appt.serviceId);
-                se (serviço) nomeDoServiço = nomeDoServiço;
+                if (service) serviceName = service.name;
             }
             const date = new Date(appt.date).toLocaleDateString('pt-PT');
 
@@ -1445,20 +1445,20 @@ classe Clientes {
             let statusColor = 'var(--text-secondary)';
             let notes = appt.notes || '';
 
-            se (appt.status === 'cancelado') {
+            if (appt.status === 'cancelled') {
                 statusText = 'Cancelado';
                 statusColor = 'var(--accent-danger)';
-                notas = `<strong>Motivo:</strong> ${appt.cancellationReason || '-'} <br>
+                notes = `<strong>Motivo:</strong> ${appt.cancellationReason || '-'} <br> 
                          <small>(${appt.isJustified ? 'Justificado' : 'Não Justificado'})</small>`;
             } else if (appt.status === 'completed' || appt.status === 'paid') {
-                statusText = 'Con';
+                statusText = 'Concluído';
                 statusColor = 'var(--accent-success)';
             } else {
-                statusText = 'Agenda';
+                statusText = 'Agendado';
                 statusColor = 'var(--accent-secondary)';
             }
 
-            retornar `
+            return `
                 <tr>
                     <td>${date}</td>
                     <td>${serviceName}</td>
@@ -1473,19 +1473,19 @@ classe Clientes {
         const inspections = [...store.getInspectionsByClientId(clientId)].sort((a, b) => new Date(b.date) - new Date(a.date));
         const container = document.getElementById('details-inspections-list');
 
-        se (inspections.length === 0) {
+        if (inspections.length === 0) {
             container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9em; text-align:center; padding:20px;">Sem inspeções anteriores.</p>';
-            retornar;
+            return;
         }
 
-        const rótulosDefeito = {
+        const defectLabels = {
             defect_scratches: 'Riscos / Pintura',
-            defect_dents: 'Amolgadalas',
-            defect_lights: 'Luzes/Faróis',
-            defeito_vidro: 'Vidros / Para-brisas',
+            defect_dents: 'Amolgadelas',
+            defect_lights: 'Luzes / Faróis',
+            defect_glass: 'Vidros / Para-brisas',
             defect_wheels: 'Pneus / Jantes',
-            defeito_interior: 'Interior',
-            luzes_do_painel_de_defeitos: 'Luzes Quadrante'
+            defect_interior: 'Interior',
+            defect_dashboard_lights: 'Luzes Quadrante'
         };
 
         container.innerHTML = inspections.map(insp => {
@@ -1501,10 +1501,10 @@ classe Clientes {
                     ${panelEntries.map(([_, pData]) => {
                         const icons = (pData.types || []).map(tId => {
                             const m = PANEL_DEFECT_TYPES.find(d => d.id === tId);
-                            retornar m ? m.ícone : '🔴';
+                            return m ? m.icon : '🔴';
                         }).join('');
-                        retornar `<span style="font-size:0.8rem; background:rgba(255,69,58,0.14); border:1px solid rgba(255,69,58,0.35); padding:3px 8px; border-radius:6px;">
-                            ${icons} <strong>${pData.name}</strong>${pData.note ? `: ${pData.note}`: ''}
+                        return `<span style="font-size:0.8rem; background:rgba(255,69,58,0.14); border:1px solid rgba(255,69,58,0.35); padding:3px 8px; border-radius:6px;">
+                            ${icons} <strong>${pData.name}</strong>${pData.note ? `: ${pData.note}` : ''}
                         </span>`;
                     }).join('')}
                    </div>`
@@ -1518,7 +1518,7 @@ classe Clientes {
                    </span>`
                 : '';
 
-            retornar `
+            return `
                 <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.06);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
                         <div>
@@ -1533,7 +1533,7 @@ classe Clientes {
                         </div>
                     </div>
                     ${panelBadgesHtml}
-                    <div style="font-size:0.9em; color:var(--text-secondary); margin-bottom:5px;"><strong>Lista de verificação geral:</strong> ${defects || 'Nenhum'}</div>
+                    <div style="font-size:0.9em; color:var(--text-secondary); margin-bottom:5px;"><strong>Checklist Geral:</strong> ${defects || 'Nenhum'}</div>
                     ${insp.notes ? `<div style="font-size:0.9em; color:var(--text-muted); margin-bottom:10px; font-style:italic;">"${insp.notes}"</div>` : ''}
                     <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:5px;">
                         ${(insp.photos || []).map(p => `<img src="${p}" style="height:60px; border-radius:4px; cursor:pointer;" onclick="window.openPhotoPreview('${p}')">`).join('')}
@@ -1548,7 +1548,7 @@ classe Clientes {
     }
 
     attachEvents() {
-        // Evento de pesquisa
+        // Search Event
         const searchInput = document.getElementById('client-search');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
@@ -1556,9 +1556,9 @@ classe Clientes {
             });
         }
 
-        // Assistentes de IA para Busca de Placas e Câmeras (Solução C)
+        // Plate Lookup & Camera AI Helpers (Solution C)
         const applyVehicleLookupResult = (entryEl, data, isAuto = false) => {
-            se (!entryEl || !data) retorne;
+            if (!entryEl || !data) return;
             const plateInput = entryEl.querySelector('input[name="plate[]"], input[name="plate"]');
             const modelInput = entryEl.querySelector('input[name="vehicle[]"], input[name="model"]');
             const yearInput = entryEl.querySelector('input[name="year[]"], input[name="year"]');
@@ -1566,13 +1566,13 @@ classe Clientes {
             const statusEl = entryEl.querySelector('.plate-lookup-status');
 
             if (plateInput && data.plate) plateInput.value = data.plate;
-            se (modelInput && data.model && (!isAuto || !modelInput.value.trim())) {
+            if (modelInput && data.model && (!isAuto || !modelInput.value.trim())) {
                 modelInput.value = data.model;
             }
-            se (anoEntrada && data.ano) {
+            if (yearInput && data.year) {
                 yearInput.value = data.year;
             }
-            se (colorSelect && data.color) {
+            if (colorSelect && data.color) {
                 colorSelect.value = data.color;
             }
 
@@ -1581,94 +1581,94 @@ classe Clientes {
                 if (data.model) parts.push(`🚗 <strong>${data.model}</strong>`);
                 if (data.year) parts.push(`📅 Ano <strong>${data.year}</strong>`);
                 if (data.color) parts.push(`🎨 Cor <strong>${data.color}</strong>`);
-                se (partes.comprimento > 0) {
+                if (parts.length > 0) {
                     statusEl.innerHTML = `<span style="color:#30d158;">✅ ${parts.join(' · ')} <span style="opacity:0.75;">(${data.source || 'Automático'})</span></span>`;
-                } senão se (!isAuto) {
+                } else if (!isAuto) {
                     statusEl.innerHTML = `<span style="color:#ffd60a;">ℹ️ Marca/Modelo não consta no catálogo público gratuito. Selecione na lista ou use o botão 📷 Foto IA.</span>`;
                 }
             }
         };
 
-        janela.handlePlateInput = async (inputEl) => {
-            se (typeof PlateLookupService === 'undefined') retornar;
+        window.handlePlateInput = async (inputEl) => {
+            if (typeof PlateLookupService === 'undefined') return;
             const raw = inputEl.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            se (raw.length === 6) {
+            if (raw.length === 6) {
                 const formatted = `${raw.slice(0, 2)}-${raw.slice(2, 4)}-${raw.slice(4, 6)}`;
-                se (inputEl.value !== formatted) {
+                if (inputEl.value !== formatted) {
                     inputEl.value = formatted;
                 }
                 const entryEl = inputEl.closest('.vehicle-entry');
                 const statusEl = entryEl ? entryEl.querySelector('.plate-lookup-status') : null;
 
-                // Consulta instantânea offline do ano IMT + pesquisa de memória local
-                const instantYear = PlateLookupService.estimateYearFromPlate(formatado);
-                const localHit = PlateLookupService.lookupInLocalDatabase(formatado);
+                // Instant offline IMT year + local memory lookup
+                const instantYear = PlateLookupService.estimateYearFromPlate(formatted);
+                const localHit = PlateLookupService.lookupInLocalDatabase(formatted);
                 if (localHit) {
                     applyVehicleLookupResult(entryEl, localHit, true);
-                    retornar;
+                    return;
                 }
 
                 if (instantYear) {
                     applyVehicleLookupResult(entryEl, {
-                        placa: formatada,
-                        ano: instantYear,
-                        Fonte: 'Série IMT Portugal'
+                        plate: formatted,
+                        year: instantYear,
+                        source: 'Série IMT Portugal'
                     }, true);
                 }
 
                 if (statusEl) {
-                    statusEl.innerHTML = `<span style="color:#60a5fa;">🔄 Ano ${instantYear || ''} calculando. A procurar Marca/Modelo para ${formatted}...</span>`;
+                    statusEl.innerHTML = `<span style="color:#60a5fa;">🔄 Ano ${instantYear || ''} calculado. A procurar Marca/Modelo para ${formatted}...</span>`;
                 }
 
-                const onlineData = await PlateLookupService.lookupPlate(formatado);
+                const onlineData = await PlateLookupService.lookupPlate(formatted);
                 applyVehicleLookupResult(entryEl, onlineData, true);
             }
         };
 
         window.triggerPlateLookupBtn = async (btnEl) => {
-            se (typeof PlateLookupService === 'undefined') retornar;
+            if (typeof PlateLookupService === 'undefined') return;
             const entryEl = btnEl.closest('.vehicle-entry');
-            Se (!entryEl) retornar;
+            if (!entryEl) return;
             const plateInput = entryEl.querySelector('input[name="plate[]"], input[name="plate"]');
             const statusEl = entryEl.querySelector('.plate-lookup-status');
             if (!plateInput || !plateInput.value.trim()) {
-                if (statusEl) statusEl.innerHTML = `<span style="color:#ff9f0a;">⚠️ Digite o primeiro a matrícula (ex: AA-00-AA).</span>`;
-                retornar;
+                if (statusEl) statusEl.innerHTML = `<span style="color:#ff9f0a;">⚠️ Digite primeiro a matrícula (ex: AA-00-AA).</span>`;
+                return;
             }
             const formatted = PlateLookupService.normalizePlate(plateInput.value);
             plateInput.value = formatted;
             if (statusEl) statusEl.innerHTML = `<span style="color:#60a5fa;">🔍 A consultar base de dados para <strong>${formatted}</strong>...</span>`;
-            const data = await PlateLookupService.lookupPlate(formatado);
+            const data = await PlateLookupService.lookupPlate(formatted);
             applyVehicleLookupResult(entryEl, data, false);
         };
 
-        janela.handleCarPhotoInput = async (fileInputEl) => {
-            se (typeof PlateLookupService === 'undefined') retornar;
+        window.handleCarPhotoInput = async (fileInputEl) => {
+            if (typeof PlateLookupService === 'undefined') return;
             const file = fileInputEl.files && fileInputEl.files[0];
-            Se (!arquivo) retornar;
+            if (!file) return;
             const entryEl = fileInputEl.closest('.vehicle-entry');
             const statusEl = entryEl ? entryEl.querySelector('.plate-lookup-status') : null;
             if (statusEl) {
-                statusEl.innerHTML = `<span style="color:#60a5fa;">📷 A análise fotográfica do veículo (Cor / Marca / Matrícula)...</span>`;
+                statusEl.innerHTML = `<span style="color:#60a5fa;">📷 A analisar fotografia do veículo (Cor / Marca / Matrícula)...</span>`;
             }
-            tente {
+            try {
                 const result = await PlateLookupService.analyzeCarPhoto(file);
                 applyVehicleLookupResult(entryEl, result, false);
-            } catch (erro) {
+            } catch (err) {
                 console.error(err);
                 if (statusEl) statusEl.innerHTML = `<span style="color:#ff453a;">Erro ao analisar imagem.</span>`;
             }
             fileInputEl.value = '';
         };
 
-        // Auxiliares globais para o 3D Car Inspector
+        // Global helpers for 3D Car Inspector
         window.focusInspectorPanel = (panelId) => {
             this.selectCarPanel(panelId);
         };
 
-        janela.removerPainelInspetor = (idPainel) => {
+        window.removeInspectorPanel = (panelId) => {
             delete this.currentPanelDefects[panelId];
-            se (this.selectedPanelId === panelId) {
+            if (this.selectedPanelId === panelId) {
                 this.selectCarPanel(panelId);
             } else {
                 this.renderCar3DMarkers(this.currentPanelDefects, 'insp');
@@ -1676,9 +1676,9 @@ classe Clientes {
             this.renderMarkedPanelsSummary();
         };
 
-        janela.viewInspection3DMap = (idInspection) => {
+        window.viewInspection3DMap = (inspectionId) => {
             const insp = store.getInspections().find(i => i.id === inspectionId);
-            Se (!insp) retornar;
+            if (!insp) return;
 
             const modal = document.getElementById('modal-view-3d-inspection');
             const dateStr = new Date(insp.date).toLocaleDateString('pt-PT');
@@ -1698,7 +1698,7 @@ classe Clientes {
 
             const entries = Object.entries(insp.panelDefects || {});
             const listBox = document.getElementById('view-3d-panels-list');
-            se (entradas.comprimento === 0) {
+            if (entries.length === 0) {
                 listBox.innerHTML = `<p style="color:var(--text-muted);">Nenhum defeito localizado em painéis específicos nesta inspeção.</p>`;
             } else {
                 listBox.innerHTML = entries.map(([_, data]) => {
@@ -1706,11 +1706,11 @@ classe Clientes {
                         const meta = PANEL_DEFECT_TYPES.find(d => d.id === tId);
                         return meta ? `<span style="font-size:0.78rem; background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:4px;">${meta.icon} ${meta.label}</span>` : '';
                     }).join(' ');
-                    retornar `
+                    return `
                         <div class="marked-panel-row" style="cursor:default; margin-bottom:8px;">
                             <div>
                                 <strong>${data.name}</strong>
-                                <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">${badges}
+                                <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">${badges}</div>
                                 ${data.note ? `<div style="font-size:0.82rem; color:var(--text-muted); margin-top:3px;">📝 "${data.note}"</div>` : ''}
                             </div>
                         </div>
@@ -1728,14 +1728,14 @@ classe Clientes {
         const closeView3DBtn = document.querySelector('.close-modal-view-3d');
         const modalView3D = document.getElementById('modal-view-3d-inspection');
         if (closeView3DBtn && modalView3D) {
-            closeView3DBtn.addEventListener('clique', () => modalView3D.classList.add('oculto'));
-            modalView3D.addEventListener('clique', (e) => {
-                if (e.target === modalView3D) modalView3D.classList.add('oculto');
+            closeView3DBtn.addEventListener('click', () => modalView3D.classList.add('hidden'));
+            modalView3D.addEventListener('click', (e) => {
+                if (e.target === modalView3D) modalView3D.classList.add('hidden');
             });
         }
 
-        // Lógica de pré-visualização de fotos
-        janela.openPhotoPreview = (src) => {
+        // Photo Preview Logic
+        window.openPhotoPreview = (src) => {
             const modal = document.getElementById('modal-photo-preview');
             const img = document.getElementById('preview-image');
             img.src = src;
@@ -1753,13 +1753,13 @@ classe Clientes {
 
             closeBtn.addEventListener('click', closeModal);
             modal.addEventListener('click', (e) => {
-                se (e.target === modal) fecheModal();
+                if (e.target === modal) closeModal();
             });
 
             window.photoPreviewEventsAttached = true;
         }
 
-        // Eventos modais do cliente
+        // Client Modal Events
         const modalClient = document.getElementById('modal-client');
         const btnAddClient = document.getElementById('btn-add-client');
         const btnCloseClient = document.querySelector('.close-modal');
@@ -1790,44 +1790,44 @@ classe Clientes {
             const formData = new FormData(formClient);
             const id = formData.get('id');
 
-            // Colecione veículos por ano e cor
-            const veículos = [];
+            // Collect vehicles with year & color
+            const vehicles = [];
             const models = formData.getAll('vehicle[]');
             const plates = formData.getAll('plate[]');
             const years = formData.getAll('year[]');
-            const cores = formData.getAll('color[]');
+            const colors = formData.getAll('color[]');
 
-            para (seja i = 0; i < models.length; i++) {
+            for (let i = 0; i < models.length; i++) {
                 if (models[i].trim()) {
                     const rawPlate = plates[i] ? plates[i].trim() : '';
                     const normPlate = (typeof PlateLookupService !== 'undefined' && rawPlate)
                         ? PlateLookupService.normalizePlate(rawPlate)
                         : rawPlate;
                     const resolvedYear = (years[i] && years[i].trim())
-                        ? anos[i].trim()
+                        ? years[i].trim()
                         : ((typeof PlateLookupService !== 'undefined' && normPlate) ? (PlateLookupService.estimateYearFromPlate(normPlate) || '') : '');
                     const resolvedColor = (colors[i] && colors[i].trim())
-                        ? cores[i].trim()
+                        ? colors[i].trim()
                         : ((typeof PlateLookupService !== 'undefined') ? (PlateLookupService.inferColorFromModelName(models[i]) || '') : '');
 
                     const vObj = {
-                        modelo: models[i].trim(),
-                        placa: normPlate,
-                        ano: String(resolvedYear || ''),
-                        cor: resolvedColor
+                        model: models[i].trim(),
+                        plate: normPlate,
+                        year: String(resolvedYear || ''),
+                        color: resolvedColor
                     };
-                    veículos.push(vObj);
+                    vehicles.push(vObj);
 
-                    se (typeof PlateLookupService !== 'undefined' && normPlate) {
+                    if (typeof PlateLookupService !== 'undefined' && normPlate) {
                         PlateLookupService.saveToPlateCache(normPlate, vObj);
                     }
                 }
             }
 
             const clientData = {
-                nome: formData.get('name'),
-                telefone: formData.get('telefone'),
-                veículos: veículos
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                vehicles: vehicles
             };
 
             if (id) {
@@ -1842,7 +1842,7 @@ classe Clientes {
             this.loadClients(document.getElementById('client-search').value);
         });
 
-        // Modal de Inspeção e Eventos Automotivos em 3D
+        // Inspection Modal & 3D Car Events
         const modalInspection = document.getElementById('modal-inspection');
         const btnCloseInspection = document.querySelector('.close-modal-inspection');
         const btnCancelInspection = document.querySelector('.close-modal-inspection-btn');
@@ -1856,7 +1856,7 @@ classe Clientes {
         btnCloseInspection.addEventListener('click', closeInspectionModal);
         btnCancelInspection.addEventListener('click', closeInspectionModal);
 
-        // Clicando em painéis no SVG 3D
+        // Clicking panels on the 3D SVG
         if (inspSvg) {
             inspSvg.querySelectorAll('.car-panel').forEach(panelEl => {
                 panelEl.addEventListener('click', () => {
@@ -1869,7 +1869,7 @@ classe Clientes {
             });
         }
 
-        // Pílulas da barra de ferramentas de defeitos rápidos
+        // Quick Defect Toolbar Pills
         document.querySelectorAll('#quick-defect-toolbar .defect-tool-pill').forEach(pill => {
             pill.addEventListener('click', () => {
                 document.querySelectorAll('#quick-defect-toolbar .defect-tool-pill').forEach(p => p.classList.remove('active'));
@@ -1878,41 +1878,41 @@ classe Clientes {
             });
         });
 
-        // Chips com defeito do editor de painel ativo
+        // Active Panel Editor Defect Chips
         document.querySelectorAll('#panel-defect-buttons .panel-defect-chip').forEach(chip => {
             chip.addEventListener('click', () => {
-                Se (!this.selectedPanelId) retornar;
+                if (!this.selectedPanelId) return;
                 this.togglePanelDefectType(this.selectedPanelId, chip.dataset.defect);
             });
         });
 
-        // Nota específica do painel ativo
+        // Active Panel Specific Note
         const panelNoteInput = document.getElementById('selected-panel-note');
         panelNoteInput.addEventListener('input', (e) => {
-            Se (!this.selectedPanelId) retornar;
+            if (!this.selectedPanelId) return;
             this.updatePanelNote(this.selectedPanelId, e.target.value);
         });
 
-        // Botão Limpar Painel Selecionado
+        // Clear Selected Panel Button
         document.getElementById('btn-clear-panel').addEventListener('click', () => {
-            Se (!this.selectedPanelId) retornar;
+            if (!this.selectedPanelId) return;
             delete this.currentPanelDefects[this.selectedPanelId];
             this.selectCarPanel(this.selectedPanelId);
             this.renderMarkedPanelsSummary();
         });
 
-        Botão Limpar Todos os Painéis
+        // Clear All Panels Button
         document.getElementById('btn-clear-all-panels').addEventListener('click', () => {
             this.currentPanelDefects = {};
             this.selectCarPanel(this.selectedPanelId);
             this.renderMarkedPanelsSummary();
         });
 
-        // Alterar seletor de veículo -> Atualizar cor do carro em 3D
+        // Vehicle Selector Change -> Update 3D Car Color
         vehicleSelect.addEventListener('change', () => {
             const client = store.getClients().find(c => c.id === this.currentClientId);
             const idx = parseInt(vehicleSelect.value, 10);
-            se (cliente && cliente.veículos && cliente.veículos[idx]) {
+            if (client && client.vehicles && client.vehicles[idx]) {
                 const v = client.vehicles[idx];
                 const col = v.color || 'Cinzento Prata';
                 carColorSelect.value = col;
@@ -1924,14 +1924,14 @@ classe Clientes {
             this.applyCar3DColor(carColorSelect.value, 'insp');
         });
 
-        // Manipulação de fotos
+        // Photo Handling
         this.currentPhotos = [];
         inputPhotos.addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
 
-            para (constante arquivo de arquivos) {
-                tente {
-                    const resizedImage = await this.resizeImage(arquivo);
+            for (const file of files) {
+                try {
+                    const resizedImage = await this.resizeImage(file);
                     this.currentPhotos.push(resizedImage);
 
                     const img = document.createElement('img');
@@ -1940,8 +1940,8 @@ classe Clientes {
                     img.style.borderRadius = '4px';
                     img.style.border = '1px solid var(--border-color)';
                     document.getElementById('photos-preview').appendChild(img);
-                } catch (erro) {
-                    console.error('Erro ao redimensionar a imagem:', err);
+                } catch (err) {
+                    console.error('Error resizing image:', err);
                 }
             }
         });
@@ -1954,35 +1954,35 @@ classe Clientes {
             const vIdx = parseInt(vehicleSelect.value, 10);
             const selectedVehicle = (client && client.vehicles && client.vehicles[vIdx]) ? client.vehicles[vIdx] : null;
 
-            const inspeção = {
+            const inspection = {
                 clientId: clientId,
                 vehicleModel: selectedVehicle ? selectedVehicle.model : '',
-                placaDoVeículo: veículoSelecionado ? (veículoSelecionado.placa || '') : '',
-                anoDoVeículo: veículoSelecionado ? (veículoSelecionado.ano || '') : '',
+                vehiclePlate: selectedVehicle ? (selectedVehicle.plate || '') : '',
+                vehicleYear: selectedVehicle ? (selectedVehicle.year || '') : '',
                 vehicleColor: carColorSelect.value || (selectedVehicle ? selectedVehicle.color : ''),
                 panelDefects: JSON.parse(JSON.stringify(this.currentPanelDefects || {})),
-                defeitos: {
+                defects: {
                     defect_scratches: formData.get('defect_scratches') === 'on',
                     defect_dents: formData.get('defect_dents') === 'on',
-                    luzes_defeituosas: formData.get('luzes_defeituosas') === 'ligadas',
+                    defect_lights: formData.get('defect_lights') === 'on',
                     defect_glass: formData.get('defect_glass') === 'on',
-                    rodas_defeituosas: formData.get('rodas_defeituosas') === 'ligado',
-                    defeito_interior: formData.get('defeito_interior') === 'ligado',
+                    defect_wheels: formData.get('defect_wheels') === 'on',
+                    defect_interior: formData.get('defect_interior') === 'on',
                     defect_dashboard_lights: formData.get('defect_dashboard_lights') === 'on',
                 },
-                notas: formData.get('notas'),
-                fotos: this.currentPhotos
+                notes: formData.get('notes'),
+                photos: this.currentPhotos
             };
 
             store.addInspection(inspection);
             closeInspectionModal();
-            se (this.currentClientId === clientId) {
+            if (this.currentClientId === clientId) {
                 this.loadClientInspections(clientId);
             }
             alert('Inspeção 3D guardada com sucesso!');
         });
 
-        // Eventos modais de detalhes do cliente
+        // Client Details Modal Events
         const modalDetails = document.getElementById('modal-client-details');
         const btnCloseDetails = document.querySelector('.close-modal-details');
         const btnNewInspection = document.getElementById('btn-new-inspection');
@@ -2006,17 +2006,17 @@ classe Clientes {
 
             document.getElementById('photos-preview').innerHTML = '';
 
-            // Preencher o seletor com os veículos dos clientes
+            // Populate client vehicles in selector
             const client = store.getClients().find(c => c.id === this.currentClientId);
-            se (cliente && cliente.veículos && cliente.veículos.comprimento > 0) {
+            if (client && client.vehicles && client.vehicles.length > 0) {
                 vehicleSelect.innerHTML = client.vehicles.map((v, idx) =>
-                    `<option value="${idx}">${v.model} (${v.plate || 'S/ Matrícula'})${v.ano ? ` - ${v.ano}` : ''}${v.color ? ` - ${v.color}` : ''}</option>`
+                    `<option value="${idx}">${v.model} (${v.plate || 'S/ Matrícula'})${v.year ? ` - ${v.year}` : ''}${v.color ? ` - ${v.color}` : ''}</option>`
                 ).join('');
                 const firstColor = client.vehicles[0].color || 'Cinzento Prata';
                 carColorSelect.value = firstColor;
                 this.applyCar3DColor(firstColor, 'insp');
             } else {
-                veículoSelect.innerHTML = `<option value="-1">Veículo Geral</option>`;
+                vehicleSelect.innerHTML = `<option value="-1">Veículo Geral</option>`;
                 carColorSelect.value = 'Cinzento Prata';
                 this.applyCar3DColor('Cinzento Prata', 'insp');
             }
@@ -2036,7 +2036,7 @@ classe Clientes {
             });
         });
 
-        // Adicionar formulário de veículo em Detalhes
+        // Add Vehicle Form in Details
         const formAddVehicle = document.getElementById('form-add-vehicle-details');
         if (formAddVehicle) {
             formAddVehicle.addEventListener('submit', (e) => {
@@ -2045,12 +2045,12 @@ classe Clientes {
                 const client = store.getClients().find(c => c.id === this.currentClientId);
 
                 if (client) {
-                    se (!cliente.veículos) cliente.veículos = [];
+                    if (!client.vehicles) client.vehicles = [];
                     client.vehicles.push({
-                        modelo: formData.get('modelo'),
+                        model: formData.get('model'),
                         plate: formData.get('plate'),
-                        ano: formData.get('ano') || '',
-                        cor: formData.get('color') || ''
+                        year: formData.get('year') || '',
+                        color: formData.get('color') || ''
                     });
                     store.updateClient(client);
                     formAddVehicle.reset();
@@ -2061,43 +2061,43 @@ classe Clientes {
         }
     }
 
-    redimensionarImagem(arquivo) {
-        retornar nova Promise((resolver, rejeitar) => {
-            const leitor = novo FileReader();
-            leitor.onload = (e) => {
+    resizeImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
 
-                    const LARGURA_MÁXIMA = 800;
-                    const ALTURA_MÁXIMA = 800;
-                    seja width = img.width;
-                    seja altura = img.altura;
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
 
-                    se (largura > altura) {
-                        se (largura > LARGURA_MÁXIMA) {
-                            altura *= LARGURA_MÁXIMA / largura;
-                            largura = LARGURA_MÁXIMA;
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
                         }
                     } else {
-                        se (altura > ALTURA_MÁXIMA) {
-                            largura *= ALTURA_MÁXIMA / altura;
-                            altura = ALTURA_MÁXIMA;
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
                         }
                     }
 
-                    canvas.width = largura;
-                    canvas.height = altura;
-                    ctx.drawImage(img, 0, 0, largura, altura);
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
 
                     resolve(canvas.toDataURL('image/jpeg', 0.7));
                 };
-                img.onerror = rejeitar;
+                img.onerror = reject;
                 img.src = e.target.result;
             };
             reader.onerror = reject;
-            leitor.readAsDataURL(arquivo);
+            reader.readAsDataURL(file);
         });
     }
 }
