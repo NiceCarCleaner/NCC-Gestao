@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ncc-gestao-v3';
+const CACHE_NAME = 'ncc-gestao-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -12,6 +12,7 @@ const ASSETS_TO_CACHE = [
     './assets/bg_watermark.png',
     './js/store.js',
     './js/services/ExportService.js',
+    './js/services/PlateLookupService.js',
     './js/components/Sidebar.js',
     './js/components/Dashboard.js',
     './js/components/Clients.js',
