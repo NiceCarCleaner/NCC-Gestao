@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ncc-gestao-v2';
+const CACHE_NAME = 'ncc-gestao-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
